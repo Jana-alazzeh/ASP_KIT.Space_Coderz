@@ -1,0 +1,1011 @@
+﻿/* ==========================================================================
+   1. الأنماط الأساسية والعامة (من الكود الأصلي الخاص بك)
+   ========================================================================== */
+/*/html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+body {*/
+    /* سنضيف الحشو العلوي لاحقاً باستخدام JavaScript ليكون دقيقاً */
+    /*margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    margin-bottom: 60px;*/ /* للـ footer */
+/*}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.btn-primary, .btn-secondary, .btn-info {
+    border-radius: 50px !important;
+}*//**/*/
+
+/* ==========================================================================
+   2. أنماط الأقسام (Home, About, Services)
+   ========================================================================== */
+/*.home-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('../Uploade/image/photo_5967444844467044647_y.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+    .home-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(24, 0, 173, 0.6);
+    }
+
+    .home-section .content {
+        position: relative;
+        z-index: 1;
+    }
+
+.about-section {
+    background-color: #cdd5ed;
+    padding: 80px 0;
+    color: #000;
+    width: 100%;
+}
+
+.services-section {
+    background-color: #8fa0d8;
+    padding: 80px 0;
+    color: #000;
+    width: 100%;
+}
+
+.navbar-nav {
+    position: relative;*/ /* ضروري لتحديد موضع الكبسولة */
+/*}*/
+
+    /* تصميم الروابط العادية */
+    /*.navbar-nav .nav-item .nav-link {
+        position: relative;
+        z-index: 1;*/ /* للتأكد من أن النص يظهر فوق الكبسولة */
+        /*color: #343a40;*/ /* لون النص الافتراضي */
+        /*transition: color 0.4s;
+        padding: 8px 16px;
+        margin: 0 5px;
+        border-radius: 20px;*/ /* لجعل الحواف دائرية */
+    /*}*/
+
+        /* تصميم الرابط النشط (عندما يكون عليه كلاس .active) */
+        /*.navbar-nav .nav-item .nav-link.active {
+            color: #ffffff !important;*/ /* لون النص أبيض عندما يكون نشطاً */
+        /*}*/
+
+    /* تصميم الكبسولة المتحركة */
+    /*.navbar-nav::before {
+        content: '';
+        position: absolute;
+        background-color: #0d2e9d;*/ /* اللون الذي طلبته */
+        /*border-radius: 20px;*/ /* نفس قيمة الـ border-radius للروابط */
+        /*transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);*/ /* تأثير حركة احترافي */
+        /*z-index: 0;*/
+        /* سيتم تحديد العرض والموقع بواسطة JavaScript */
+    /*}*/
+
+/* تعديل ألوان الروابط في الصفحة الرئيسية (عندما يكون الشريط شفافاً) */
+/*.home-page .navbar:not(.scrolled) .navbar-nav .nav-link {
+    color: #ffffff !important;
+}*/
+
+    /* تعديل لون الرابط النشط عندما يكون الشريط شفافاً */
+    /*.home-page .navbar:not(.scrolled) .navbar-nav .nav-link.active {
+        color: #ffffff !important;*/ /* يبقى أبيض */
+    /*}*/
+
+/* تعديل لون الروابط عندما يتم التمرير */
+/*.home-page .navbar.scrolled .navbar-nav .nav-link {
+    color: #343a40 !important;
+}*/
+
+    /* تعديل لون الرابط النشط عندما يتم التمرير */
+    /*.home-page .navbar.scrolled .navbar-nav .nav-link.active {
+        color: #ffffff !important;
+    }
+
+
+.capsule-indicator {
+    position: absolute;
+    background-color: #0d2e9d;
+    border-radius: 50px;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 0;*/ /* الكبسولة تكون في الخلف */
+   
+/*}*/
+
+
+/* 1. الأنماط الأساسية */
+/*html {
+    font-size: 14px;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    position: relative;
+    min-height: 100%;
+    margin-bottom: 60px;
+}
+
+main {
+    display: block;
+}*/
+
+/* 2. أنماط الأقسام */
+/*.home-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('../Uploade/image/photo_5967444844467044647_y.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .home-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(24, 0, 173, 0.6);
+    }
+
+    .home-section .content {
+        position: relative;
+        z-index: 1;
+        color: white;
+    }
+
+.about-section, .services-section {
+    padding: 80px 0;
+    width: 100%;
+}
+
+.about-section {
+    background-color: #cdd5ed;
+}
+
+.services-section {
+    background-color: #8fa0d8;
+}
+
+.footer {
+    background-color: #f8f9fa;
+}*/
+
+/* 3. تصميم شريط التنقل والكبسولة (يدعم الحالتين) */
+/*.navbar {
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    background-color: transparent !important;*/ /* يبدأ شفافاً */
+    /*padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+    .navbar.scrolled {
+        background-color: #ffffff !important;*/ /* يصبح أبيض عند التمرير أو في الصفحات الأخرى */
+        /*box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .container-fluid {
+        max-width: 1200px;*/ /* يعطي هوامش جميلة على الشاشات الكبيرة */
+    /*}
+
+.navbar-nav {
+    position: relative;
+}
+
+.capsule-indicator {
+    position: absolute;
+    background-color: #0d2e9d;
+    border-radius: 50px;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 0;*/ /* الكبسولة في الخلف */
+    /*opacity: 0;*/ /* تبدأ مخفية */
+/*}
+
+.nav-link {
+    position: relative;
+    z-index: 1;*/ /* النص في الأمام */
+    /*padding: 8px 20px !important;
+    margin: 0 5px;
+    border-radius: 50px;
+    white-space: nowrap;
+    transition: color 0.4s ease;
+    font-weight: 500;
+    color: #f0f0f0 !important;*/ /* لون أبيض باهت قليلاً في الحالة الشفافة */
+/*}
+
+.navbar.scrolled .nav-link {
+    color: #343a40 !important;*/ /* لون داكن عندما يكون الشريط أبيض */
+/*}*/
+
+/* الرابط النشط دائماً أبيض ليظهر فوق الكبسولة الزرقاء */
+/*.nav-link.active {
+    color: #ffffff !important;
+}*/
+
+/* أيقونة زر القائمة (الهمبرغر) */
+/*.navbar-toggler {
+    border: none;
+}
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.8 )' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar.scrolled .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.6 )' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 1. الأنماط الأساسية */
+/*html {
+    font-size: 14px;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    position: relative;
+    min-height: 100%;
+    margin-bottom: 60px;
+}
+
+main {
+    display: block;
+}*/
+
+/* 2. أنماط الأقسام */
+/*.home-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('../Uploade/image/photo_5967444844467044647_y.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .home-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(24, 0, 173, 0.6);
+    }
+
+    .home-section .content {
+        position: relative;
+        z-index: 1;
+        color: white;
+    }
+
+.about-section, .services-section {
+    padding: 80px 0;
+    width: 100%;
+}
+
+.about-section {
+    background-color: #cdd5ed;
+}
+
+.services-section {
+    background-color: #8fa0d8;
+}
+
+.footer {
+    background-color: #f8f9fa;
+}*/
+
+/* 3. تصميم شريط التنقل والكبسولة (النسخة المصححة) */
+/*.navbar {
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    background-color: transparent !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 15px auto;*/ /* <<<<<<< إعادة الهامش العلوي والسفلي */
+    /*border-radius: 50px;*/ /* <<<<<<< إعادة الحواف الدائرية */
+    /*max-width: 95%;*/ /* <<<<<<< تحديد العرض لإنشاء الهوامش الجانبية */
+/*}
+
+    .navbar.scrolled {
+        background-color: #ffffff !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar .container-fluid {
+        max-width: 1200px;
+    }
+
+.navbar-nav {
+    position: relative;
+}
+
+.capsule-indicator {
+    position: absolute;
+    background-color: #0d2e9d;
+    border-radius: 50px;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 0;
+    opacity: 0;
+}
+
+.nav-link {
+    position: relative;
+    z-index: 1;
+    padding: 8px 20px !important;
+    margin: 0 5px;
+    border-radius: 50px;
+    white-space: nowrap;
+    transition: color 0.4s ease;
+    font-weight: 500;
+    color: #f0f0f0 !important;
+}
+
+.navbar.scrolled .nav-link {
+    color: #343a40 !important;
+}
+
+.nav-link.active {
+    color: #ffffff !important;
+}*/
+
+/* 4. إعادة ستايل زر اللغة (AR/EN) */
+/*.language-switch {
+    display: flex;
+    align-items: center;
+    padding-left: 15px;*/ /* لإعطائه مسافة من الروابط */
+/*}
+
+.lang-btn {
+    display: inline-block;
+    background-color: #1800ad;
+    color: white !important;*/ /* إضافة !important لضمان تطبيق اللون */
+    /*width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+    .lang-btn:hover {
+        background-color: #12007e;
+        text-decoration: none;
+        color: white;
+    }*/
+
+/* 5. أيقونة زر القائمة (الهمبرغر) */
+/*.navbar-toggler {
+    border: none;
+}
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.8 )' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar.scrolled .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.6 )' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}*/
+
+
+
+/* 1. الأنماط الأساسية */
+html {
+    font-size: 14px;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    height: 100%; /* 🛑 هذا مهم أيضاً */
+    overflow-x: hidden; /* لمنع ظهور شريط تمرير أفقي */
+
+}
+
+body {
+    position: relative;
+    min-height: 100%;
+    margin-bottom: 60px;
+    background-color: #cdd5ed; /* 👈 هذا هو السطر الأهم */
+    margin-bottom: 60px;
+    
+
+}
+
+
+
+main {
+    display: block;
+}
+
+
+/* 2. أنماط الأقسام (تبقى كما هي) */
+.hero-image {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('../Uploade/image/photo_5967444844467044647_y.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -100px; /* نسحب الصورة للأعلى لتظهر تحت الشريط */
+}
+
+    .hero-image::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(24, 0, 173, 0.6);
+    }
+
+    .hero-image .content {
+        position: relative;
+        z-index: 1;
+        color: white;
+    }
+
+.about-section, .services-section {
+    padding: 80px 0;
+    width: 100%;
+}
+
+.about-section {
+    background-color: #cdd5ed;
+}
+
+.services-section {
+    background-color: #8fa0d8;
+}
+
+.footer {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #ffffff !important; /* <<<<<<< خلفية بيضاء دائماً */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* ظل واضح وجميل */
+    border-radius: 50px; /* <<<<<<< حواف دائرية بالكامل */
+    margin: 20px auto; /* <<<<<<< هامش ليجعله يطفو في المنتصف */
+    max-width: 80%; /* عرض الشريط */
+    padding: 0px 0px;
+    transition: none !important; /* لا حاجة لأي تأثيرات انتقالية */
+}
+
+    .navbar .container-fluid {
+        max-width: 1200px;
+    }
+
+.navbar-nav {
+    position: relative;
+}
+
+.capsule-indicator {
+    position: absolute;
+    background-color: #0d2e9d;
+    border-radius: 50px;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 0;
+    opacity: 0;
+}
+
+.nav-link {
+    position: relative;
+    z-index: 1;
+    padding: 8px 20px !important;
+    margin: 0 5px;
+    border-radius: 50px;
+    white-space: nowrap;
+    font-weight: 500;
+    color: #343a40 !important; /* <<<<<<< لون النص داكن دائماً */
+}
+
+    .nav-link.active {
+        color: #ffffff !important; /* <<<<<<< لون النص أبيض فقط عندما يكون نشطاً */
+    }
+
+/* 4. ستايل زر اللغة (AR/EN) */
+.language-switch {
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+
+.lang-btn {
+    display: inline-block;
+    background-color: #1800ad;
+    color: white !important;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+    .lang-btn:hover {
+        background-color: #12007e;
+    }
+
+/* 5. أيقونة زر القائمة (الهمبرغر) */
+.navbar-toggler {
+    border: none;
+}
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+
+.navbar-toggler-icon {
+    /* الأيقونة ستكون داكنة دائماً لتناسب الخلفية البيضاء */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.6 )' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+
+/* تطبيق الخط على قسم الـ hero */
+.hero-image .content {
+    font-family: 'Lato', sans-serif; /* تغيير اسم الخط هنا */
+}
+
+    /* تكبير حجم العنوان الرئيسي */
+    .hero-image .content h1 {
+        font-size: 4.5rem; /* يمكنك تعديل هذا الرقم حسب ما تراه مناسباً */
+        font-weight: 700; /* لجعل الخط عريضاً (bold) */
+    }
+
+    /* تكبير حجم النص الثانوي */
+    .hero-image .content p {
+        font-size: 1.25rem; /* يمكنك تعديل هذا الرقم أيضاً */
+        margin-top: 1rem; /* إضافة مسافة بسيطة تحت العنوان */
+        margin-bottom: 2rem; /* إضافة مسافة فوق الأزرار */
+    }
+
+
+
+.auth-container {
+    position: relative;
+    width: 100%; /* يملأ العرض */
+    height: 100vh; /* 🛑 يملأ الارتفاع (vh = viewport height) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    /* --- الجزء الخاص بالخلفية --- */
+    /* 🛑 استبدلي 'path/to/your/image.jpg' بالمسار الصحيح للصورة */
+    background-image: url('../Uploade/image/backgroungls - Copy.JPG'); /* <--- غيري هذا المسار */
+    background-size: cover; /* تملأ الشاشة بدون تشويه */
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+    /* 2. الطبقة الزرقاء الشفافة التي توضع فوق الصورة */
+    .auth-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /* --- الجزء الخاص باللون الشفاف --- */
+        /* يمكنكِ تعديل اللون ودرجة الشفافية (0.85) حسب رغبتك */
+        background-color: rgba(205, 213, 237, 0.85); /* هذا لون أزرق فاتح جداً (#cdd5ed) مع شفافية */
+        z-index: 1; /* للتأكد من أنها تحت بطاقة تسجيل الدخول */
+    }
+
+/* 3. بطاقة تسجيل الدخول نفسها (للتأكد من أنها تظهر فوق الطبقة الشفافة) */
+.auth-card {
+    position: relative;
+    z-index: 2; /* <<--- هذا يجعلها تظهر في المقدمة */
+    width: 100%;
+    max-width: 450px; /* يمكنك تعديل العرض حسب رغبتك */
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.95); /* خلفية بيضاء شبه شفافة للبطاقة (تأثير زجاجي) */
+    backdrop-filter: blur(10px); /* تأثير ضبابي جميل للخلفية خلف البطاقة */
+}
+/* =============================================== */
+/* == تصميم قسم الدورات بالتمرير الأفقي == */
+/* =============================================== */
+
+
+.courses-section-fullwidth {
+
+    padding: 60px 0; /* حشو علوي وسفلي فقط */
+    width: 100vw; 
+    /* العرض الكامل لنافذة العرض */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 40px; /* يمكنك تعديل هذه المسافة */
+}
+
+/* 2. حاوية التمرير الأفقية */
+.horizontal-scroll-container {
+    display: flex; /* يجعل العناصر بداخلها (البطاقات) تصطف أفقياً */
+    overflow-x: auto; /* يسمح بالتمرير على المحور الأفقي (X) */
+    padding-bottom: 20px; /* يضيف مسافة في الأسفل حتى لا يلتصق شريط التمرير بالبطاقات */
+    gap: 25px; /* المسافة بين كل بطاقة والأخرى */
+    /* --- الجزء السحري لإخفاء شريط التمرير --- */
+    scrollbar-width: none; /* لمتصفح Firefox */
+    -ms-overflow-style: none; /* لمتصفح Internet Explorer و Edge القديم */
+}
+
+    /* إخفاء شريط التمرير لمتصفحات Webkit (Chrome, Safari) */
+    .horizontal-scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+
+/* 3. تصميم بطاقة الدورة الفردية */
+.course-card-scroll {
+    flex: 0 0 320px; /* يمنع البطاقة من الانكماش أو التمدد، ويحدد عرضها الثابت */
+    background-color: #032ba7; /* الخلفية الزرقاء الداكنة للبطاقة */
+    color: #ffffff; /* لون النص أبيض */
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+    .course-card-scroll:hover {
+        transform: translateY(-5px); /* تأثير بسيط عند المرور بالفأرة */
+    }
+
+    .course-card-scroll img {
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .course-card-scroll .card-body {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1; /* يجعل محتوى البطاقة يملأ المساحة المتاحة */
+        padding: 1.5rem;
+    }
+
+    .course-card-scroll .card-title {
+        font-weight: bold;
+        flex-grow: 1; /* يدفع الزر للأسفل */
+    }
+
+    .course-card-scroll .btn-enroll {
+        background-color: #ffffff;
+        color: #032ba7;
+        font-weight: bold;
+        border-radius: 50px;
+        border: none;
+        padding: 10px 20px;
+        margin-top: 1rem; /* مسافة فوق الزر */
+    }
+/* =============================================== */
+/* == تصميم بطاقة المنتج مع تمرير الصور (Hover) == */
+/* =============================================== */
+
+/* 1. البطاقة الخارجية */
+.product-card-hover {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+    /* ==================== بداية التعديل ==================== */
+    /* 
+       قمنا بتصغير الارتفاع من 450px إلى 380px.
+       هذا هو التغيير الرئيسي الذي سيصغر حجم الصور.
+       يمكنك تغيير هذه القيمة إلى 400px أو 360px لتصل إلى الحجم المثالي.
+    */
+    height: 380px;
+    /* ==================== نهاية التعديل ==================== */
+
+    background-color: #fff;
+}
+
+    .product-card-hover:hover {
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+/* 2. حاوية الصور الداخلية التي ستتحرك */
+.product-images-container {
+    display: flex;
+    width: 200%;
+    height: 70%;
+    transition: transform 0.5s ease-in-out;
+}
+
+/* 3. عند المرور على البطاقة، حرك الحاوية لليسار */
+.product-card-hover:hover .product-images-container {
+    transform: translateX(-50%);
+}
+
+/* 4. تنسيق كل صورة على حدة */
+.product-images-container img {
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 5. تنسيق قسم المعلومات أسفل الصور */
+.product-card-info {
+    /* ==================== بداية التعديل ==================== */
+    /* 
+       قمنا بتصغير الـ padding قليلاً ليتناسب مع الحجم الجديد.
+       هذا سيمنع النص من أن يبدو مزدحماً في المساحة الأصغر.
+    */
+    padding: 15px;
+    /* ==================== نهاية التعديل ==================== */
+
+    height: 30%;
+}
+F
+/* =============================================== */
+/* == تصميم المتجر الفني (صورة بجانب النص) == */
+/* =============================================== */
+
+/* 1. حاوية المتجر الرئيسية مع صورة الخلفية */
+.store-container {
+    background-image: url('/Uploade/image/Gemini_Generated_Image_6rt3kp6rt3kp6rt3-removebg-preview.png'); /* 🛑 تأكدي من وضع صورة النمط في هذا المسار */
+    background-repeat: repeat; /* تكرار النمط ليملأ الخلفية */
+    background-size: auto;
+    padding: 40px 0;
+}
+
+
+/* 2. حاوية المنتج الواحد (صورة + نص) */
+.product-showcase {
+    display: flex; /* يجعل الصورة والنص يصطفان جنباً إلى جنب */
+    align-items: center; /* توسيط العناصر عمودياً */
+    margin-bottom: 80px; /* مسافة كبيرة بين كل منتج والذي يليه */
+}
+
+    /* 3. تعديل اتجاه الصف للمنتجات الزوجية (لعمل التأثير المتعاكس) */
+    .product-showcase:nth-child(even) {
+        flex-direction: row-reverse; /* يعكس اتجاه الصف (النص على اليسار والصورة على اليمين) */
+    }
+
+/* 4. تصميم حاوية الصورة */
+.product-image-wrapper {
+    flex: 1; /* تأخذ نصف المساحة */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .product-image-wrapper img {
+        max-width: 80%;
+        height: auto;
+        border-radius: 25px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+    }
+
+        .product-image-wrapper img:hover {
+            transform: scale(1.05); /* تكبير بسيط للصورة عند المرور */
+        }
+
+/* 5. تصميم حاوية النص */
+.product-text-wrapper {
+    flex: 1; /* تأخذ النصف الآخر من المساحة */
+    padding: 0 50px;
+    color: #032ba7; /* لون النص أزرق داكن */
+}
+
+    .product-text-wrapper h2 {
+        font-weight: bold;
+        font-size: 2.5rem;
+    }
+
+.artistic-store-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr); /* تقسيم الشاشة إلى 12 عموداً وهمياً */
+    grid-auto-rows: minmax(100px, auto);
+    gap: 20px; /* المسافة بين العناصر */
+    padding: 50px 0;
+    background-image: url('/Uploade/image/Gemini_Generated_Image_6rt3kp6rt3kp6rt3-removebg-preview.png'); /* 🛑 صورة الخلفية */
+    background-repeat: repeat;
+}
+
+/* 2. العنصر الواحد داخل الشبكة */
+.artistic-product-item {
+    /* سيتم تحديد مكان كل عنصر على حدة */
+}
+
+/* 3. تصميم بطاقة المنتج (مع تأثير تمرير الصور) */
+.product-card-hover {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    height: 100%; /* البطاقة تملأ ارتفاع الخلية في الشبكة */
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-images-container {
+    display: flex;
+    width: 200%;
+    height: 70%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.product-card-hover:hover .product-images-container {
+    transform: translateX(-50%);
+}
+
+.product-images-container img {
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-card-info {
+    padding: 15px;
+    height: 30%;
+}
+
+/* 4. تحديد أماكن المنتجات في الشبكة (هذا هو الجزء السحري) */
+/* المنتج الأول */
+.artistic-product-item:nth-child(1) {
+    grid-column: 2 / span 4; /* يبدأ من العمود 2 ويأخذ 4 أعمدة عرضاً */
+    grid-row: 1 / span 4; /* يبدأ من الصف 1 ويأخذ 4 صفوف ارتفاعاً */
+}
+
+/* المنتج الثاني */
+.artistic-product-item:nth-child(2) {
+    grid-column: 7 / span 4; /* يبدأ من العمود 7 */
+    grid-row: 2 / span 4; /* يبدأ من الصف 2 (أسفل قليلاً) */
+}
+
+/* المنتج الثالث */
+.artistic-product-item:nth-child(3) {
+    grid-column: 3 / span 4; /* يبدأ من العمود 3 */
+    grid-row: 6 / span 4; /* يبدأ من الصف 6 (أسفل المنتج الأول) */
+}
+
+/* المنتج الرابع */
+.artistic-product-item:nth-child(4) {
+    grid-column: 8 / span 4; /* يبدأ من العمود 8 */
+    grid-row: 7 / span 4; /* يبدأ من الصف 7 */
+}
+
+.store-page-background {
+    background-color: #e3e8f8; /* لون الخلفية الأزرق الفاتح */
+    background-image: url('/Uploade/image/Gemini_Generated_Image_6rt3kp6rt3kp6rt3-removebg-preview.png'); /* 🛑 صورة الخلفية */
+    background-repeat: repeat;
+    padding: 50px 0;
+}
+
+.product-card-simple {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: #fff;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+    .product-card-simple:hover {
+        transform: translateY(-5px);
+    }
+
+    .product-card-simple img {
+        width: 100%;
+        height: 250px; /* ارتفاع ثابت للصورة */
+        object-fit: cover;
+    }
+
+    .product-card-simple .card-body {
+        padding: 15px;
+    }
+progress {
+    -webkit-appearance: none;
+    appearance: none;
+}
+.my-progress-bar .ui-progressbar-value {
+    box-sizing: content-box !important;
+}
+/* تطبيق الخط على قسم الـ hero وقسم الـ services */
+.hero-image .content,
+.services-section { /* <--- تمت إضافة هذا السطر */
+    font-family: 'Lato', sans-serif; /* تأكد من أنه نفس الخط الذي اخترته */
+}
+
+    /* يمكنك أيضًا التحكم في أحجام الخطوط في قسم الخدمات بشكل منفصل إذا أردت */
+    .services-section h3 {
+        font-weight: 700; /* لجعل الخط عريضًا */
+    }
+
+    .services-section .lead {
+        font-size: 1.15rem; /* تعديل حجم النص الثانوي إذا لزم الأمر */
+    }
+/* تطبيق الخطوط على الأقسام المختلفة */
+.hero-image .content,
+.services-section,
+.about-section { /* <--- تمت إضافة هذا السطر */
+    font-family: 'Lato', sans-serif; /* تطبيق خط Lato */
+}
+
+
+.site-footer {
+    background-color: #f8f9fa;
+    padding: 45px 0 20px;
+    font-size: 15px;
+    line-height: 24px;
+    color: #737373;
+    border-top: 1px solid #e5e5e5;
+}
+   
+    .site-footer .col-lg {
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+    }
+
+
+.social-icons.justify-content-center {
+    display: flex;
+    justify-content: center;
+}
+
+
+@media (min-width: 992px) {
+    .social-icons.justify-content-lg-end {
+        justify-content: flex-end;
+    }
+}

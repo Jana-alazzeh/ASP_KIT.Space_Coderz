@@ -1,0 +1,615 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="HeroTitle" xml:space="preserve">
+    <value>عالم التكنولوجيا بين يديك!</value>
+  </data>
+  <data name="HeroTitle2" xml:space="preserve">
+    <value>عالم التكنولوجيا بين يديك!</value>
+  </data>
+  <data name="HeroTitle1" xml:space="preserve">
+    <value>عالم التكنولوجيا بين يديك!</value>
+  </data>
+  <data name="HeroSubtitle" xml:space="preserve">
+    <value>أتقن مهارات المستقبل وانضم لمجتمعنا المُلهم!
+</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>الرئيسية</value>
+  </data>
+  <data name="Get Started" xml:space="preserve">
+    <value>ابدأ الآن
+</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>غير مصرح لك بالدخول</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>الصلاحيات</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>خدماتنا</value>
+  </data>
+  <data name="OurServices" xml:space="preserve">
+    <value>خدماتنا</value>
+  </data>
+  <data name="LearnCreateAchieve" xml:space="preserve">
+    <value>تعلم، ابتكر، وحقق</value>
+  </data>
+  <data name="ServicesDescription" xml:space="preserve">
+    <value>استكشف مجموعتنا من الدورات، ورش العمل، والمشاريع التقنية المصممة لمساعدتك على التعلم والنمو وترك أثر إيجابي.</value>
+  </data>
+  <data name="OurCourses" xml:space="preserve">
+    <value>دوراتنا</value>
+  </data>
+  <data name="AboutUs" xml:space="preserve">
+    <value>من نحن</value>
+  </data>
+  <data name="WhoWeAre" xml:space="preserve">
+    <value>من نحن</value>
+  </data>
+  <data name="KitSpace" xml:space="preserve">
+    <value>مساحة كيت</value>
+  </data>
+  <data name="AboutUsDescription" xml:space="preserve">
+    <value>مجتمع تقني يقوده الشباب يجمع بين الابتكار والهدف. نقدم دورات وورش عمل ومشاريع واقعية لتمكين المتعلمين وترك أثر إيجابي. انضم إلينا وكن جزءًا من رحلة تقود فيها التكنولوجيا التغيير.</value>
+  </data>
+  <data name="JoinUsTitle" xml:space="preserve">
+    <value>انضم إلينا</value>
+  </data>
+  <data name="JoinKitFamily" xml:space="preserve">
+    <value>انضم إلى عائلة KIT</value>
+  </data>
+  <data name="JoinUsPageSubtitle" xml:space="preserve">
+    <value>شارك شغفك بالتقنية وكن جزءًا من رحلتنا لتطوير المجتمع التقني. املأ النموذج أدناه وسنتواصل معك قريباً.</value>
+  </data>
+  <data name="WhyJoinKit" xml:space="preserve">
+    <value>ما الذي دفعك للانضمام إلى KIT؟</value>
+  </data>
+  <data name="MotivationPlaceholder" xml:space="preserve">
+    <value>شاركنا رؤيتك وما تأمل في تحقيقه من خلال انضمامك إلى فريقنا...</value>
+  </data>
+  <data name="HowCanYouContributeToKit" xml:space="preserve">
+    <value>كيف يمكنك المساهمة في تطوير KIT؟</value>
+  </data>
+  <data name="WhyJoinUs" xml:space="preserve">
+    <value>لماذا تنضم إلى KIT؟</value>
+  </data>
+  <data name="FieldOfInterest" xml:space="preserve">
+    <value>مجال الاهتمام</value>
+  </data>
+  <data name="SelectField" xml:space="preserve">
+    <value>اختر المجال الذي تود الانضمام إليه</value>
+  </data>
+  <data name="FieldTech" xml:space="preserve">
+    <value>تطوير البرمجيات (Developer )</value>
+  </data>
+	<data name="ApplicationForm" xml:space="preserve">
+    <value>طلب الانضمام</value>
+  </data>
+	<data name="LookingForCreatives" xml:space="preserve">
+    <value>نحن نبحث عن أشخاص مبدعين ومتحمسين للانضمام إلى فريقنا.</value>
+  </data>
+	<data name="PersonalInfo" xml:space="preserve">
+    <value>المعلومات الشخصية</value>
+  </data>
+	<data name="FullName" xml:space="preserve">
+    <value>الاسم الكامل</value>
+  </data>
+	<data name="EnterYourFullName" xml:space="preserve">
+    <value>أدخل اسمك الكامل</value>
+  </data>
+	<data name="Email" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+	<data name="PhoneNumber" xml:space="preserve">
+    <value>رقم الهاتف</value>
+  </data>
+	<data name="FieldOfInterest" xml:space="preserve">
+    <value>مجال الاهتمام</value>
+  </data>
+	<data name="FieldDesign" xml:space="preserve">
+    <value>تصميم وجرافيك (Designer)</value>
+  </data>
+	<data name="FieldCommunity" xml:space="preserve">
+    <value>تنسيق الفعاليات والمجتمع (Community)</value>
+  </data>
+	<data name="FieldMarketing" xml:space="preserve">
+    <value>تسويق ومحتوى (Marketing)</value>
+  </data>
+	<data name="FieldBusiness" xml:space="preserve">
+    <value>تطوير الأعمال (Business Development)</value>
+  </data>
+	<data name="ExperienceAndSkills" xml:space="preserve">
+    <value>خبرتك ومهاراتك</value>
+  </data>
+	<data name="TechExperienceSummary" xml:space="preserve">
+    <value>ملخص خبرتك التقنية</value>
+  </data>
+	<data name="ExperiencePlaceholder" xml:space="preserve">
+    <value>اذكر أهم المشاريع والمهارات التقنية لديك، الشهادات، والخبرات العملية... (300 كلمة كحد أقصى)</value>
+  </data>
+	<data name="PortfolioLink" xml:space="preserve">
+    <value>رابط أعمالك (اختياري)</value>
+  </data>
+	<data name="MotivationsAndGoals" xml:space="preserve">
+    <value>دوافعك وأهدافك</value>
+  </data>
+	<data name="ContributionPlaceholder" xml:space="preserve">
+    <value>اذكر الأفكار والمهارات التي يمكنك تقديمها لتطوير فريقنا ومشاريعنا...</value>
+  </data>
+	<data name="SubmitApplication" xml:space="preserve">
+    <value>إرسال طلب الانضمام</value>
+  </data>
+	<data name="BenefitTeamTitle" xml:space="preserve">
+    <value>فريق متميز</value>
+  </data>
+	<data name="BenefitTeamDesc" xml:space="preserve">
+    <value>انضم إلى فريق من المطورين والمصممين المبدعين والمتحمسين للتقنية.</value>
+  </data>
+	<data name="BenefitProjectsTitle" xml:space="preserve">
+    <value>مشاريع مبتكرة</value>
+  </data>
+	<data name="BenefitProjectsDesc" xml:space="preserve">
+    <value>شارك في تطوير مشاريع تقنية مبتكرة تخدم المجتمع.</value>
+  </data>
+	<data name="BenefitSkillsTitle" xml:space="preserve">
+    <value>تطوير المهارات</value>
+  </data>
+	<data name="BenefitSkillsDesc" xml:space="preserve">
+    <value>فرصة لتطوير مهاراتك التقنية والعملية من خلال التدريب والمشاريع الحقيقية.</value>
+  </data>
+	<data name="BenefitEnvTitle" xml:space="preserve">
+    <value>بيئة محفزة</value>
+  </data>
+	<data name="BenefitEnvDesc" xml:space="preserve">
+    <value>بيئة عمل محفزة ومرنة تدعم الإبداع والابتكار والنمو المهني.</value>
+  </data>
+	<data name="ShoppingCart" xml:space="preserve">
+    <value>سلة التسوق</value>
+  </data>
+	<data name="CartContents" xml:space="preserve">
+    <value>محتويات سلة التسوق</value>
+  </data>
+	<data name="Size" xml:space="preserve">
+    <value>المقاس</value>
+  </data>
+	<data name="GrandTotal" xml:space="preserve">
+    <value>المجموع الكلي</value>
+  </data>
+	<data name="ProceedToCheckout" xml:space="preserve">
+    <value>إتمام الشراء</value>
+  </data>
+	<data name="CartIsEmpty" xml:space="preserve">
+    <value>سلة التسوق فارغة!</value>
+  </data>
+	<data name="CartEmptyDescription" xml:space="preserve">
+    <value>لم تقم بإضافة أي منتجات إلى السلة بعد.</value>
+  </data>
+	<data name="BrowseProducts" xml:space="preserve">
+    <value>تصفح المنتجات</value>
+  </data>
+	<data name="Checkout" xml:space="preserve">
+    <value>إتمام الطلب</value>
+  </data>
+	<data name="ShippingInfo" xml:space="preserve">
+    <value>معلومات الشحن</value>
+  </data>
+	<data name="ReviewOrder" xml:space="preserve">
+    <value>مراجعة الطلب</value>
+  </data>
+	<data name="ConfirmOrder" xml:space="preserve">
+    <value>تأكيد الطلب</value>
+  </data>
+	<data name="ShippingAndDeliveryInfo" xml:space="preserve">
+    <value>معلومات الشحن والتوصيل</value>
+  </data>
+	<data name="DetailedAddress" xml:space="preserve">
+    <value>العنوان المفصل</value>
+  </data>
+	<data name="AddressPlaceholder" xml:space="preserve">
+    <value>مثال: شارع عبد الله ابو غوشة، عمّان</value>
+  </data>
+	<data name="DeliveryNotes" xml:space="preserve">
+    <value>ملاحظات التوصيل (اختياري)</value>
+  </data>
+	<data name="NotesPlaceholder" xml:space="preserve">
+    <value>أي ملاحظات خاصة للتوصيل...</value>
+  </data>
+	<data name="PaymentMethod" xml:space="preserve">
+    <value>طريقة الدفع</value>
+  </data>
+	<data name="CashOnDelivery" xml:space="preserve">
+    <value>الدفع عند الاستلام</value>
+  </data>
+	<data name="OrderSummary" xml:space="preserve">
+    <value>ملخص الطلب</value>
+  </data>
+	<data name="NoProductsInCart" xml:space="preserve">
+    <value>لا توجد منتجات في سلة التسوق.</value>
+  </data>
+	<data name="Subtotal" xml:space="preserve">
+    <value>المجموع الفرعي</value>
+  </data>
+	<data name="ShippingFee" xml:space="preserve">
+    <value>رسوم الشحن</value>
+  </data>
+	<data name="Currency" xml:space="preserve">
+    <value>د.أ</value>
+  </data>
+	<data name="ConfirmOrderPrompt" xml:space="preserve">
+    <value>هل أنت متأكد من تأكيد هذا الطلب؟</value>
+  </data>
+	<data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+	<data name="NavHome" xml:space="preserve">
+    <value>الرئيسية</value>
+  </data>
+	<data name="NavAbout" xml:space="preserve">
+    <value>من نحن</value>
+  </data>
+	<data name="NavServices" xml:space="preserve">
+    <value>خدماتنا</value>
+  </data>
+	<data name="NavStore" xml:space="preserve">
+    <value>المتجر</value>
+  </data>
+	<data name="NavMission" xml:space="preserve">
+    <value>مهمتنا</value>
+  </data>
+	<data name="NavJoinUs" xml:space="preserve">
+    <value>انضم إلينا</value>
+  </data>
+	<data name="NavContact" xml:space="preserve">
+    <value>تواصل معنا</value>
+  </data>
+	<data name="NavCart" xml:space="preserve">
+    <value>السلة</value>
+  </data>
+	<data name="ContactPageSubtitle" xml:space="preserve">
+    <value>نحن هنا للإجابة على جميع استفساراتك حول الكورسات والخدمات والشراكات. لا تتردد في التواصل معنا عبر النموذج أدناه أو من خلال وسائل التواصل المباشرة.</value>
+  </data>
+	<data name="SendUsAMessage" xml:space="preserve">
+    <value>أرسل لنا رسالة</value>
+  </data>
+	<data name="WillReplyASAP" xml:space="preserve">
+    <value>سنقوم بالرد على رسالتك في أقرب وقت ممكن.</value>
+  </data>
+	<data name="MessageSubject" xml:space="preserve">
+    <value>موضوع الرسالة</value>
+  </data>
+	<data name="SubjectPlaceholder" xml:space="preserve">
+    <value>ما هو موضوع رسالتك؟</value>
+  </data>
+	<data name="MessageText" xml:space="preserve">
+    <value>نص الرسالة</value>
+  </data>
+	<data name="MessagePlaceholder" xml:space="preserve">
+    <value>اكتب رسالتك هنا بالتفصيل...</value>
+  </data>
+	<data name="SendMessage" xml:space="preserve">
+    <value>إرسال الرسالة</value>
+  </data>
+	<data name="DirectContactMethods" xml:space="preserve">
+    <value>طرق التواصل المباشر</value>
+  </data>
+	<data name="PhoneCall" xml:space="preserve">
+    <value>الاتصال الهاتفي</value>
+  </data>
+	<data name="PhoneDescription" xml:space="preserve">
+    <value>للاستفسارات العاجلة والدعم الفوري.</value>
+  </data>
+	<data name="EmailDescription" xml:space="preserve">
+    <value>لطلبات الشراكة والاستفسارات التفصيلية.</value>
+  </data>
+	<data name="OurLocation" xml:space="preserve">
+    <value>موقعنا</value>
+  </data>
+	<data name="LocationDescription" xml:space="preserve">
+    <value>مقر KIT في الأردن.</value>
+  </data>
+	<data name="ViewOnMap" xml:space="preserve">
+    <value>عرض الموقع على الخريطة</value>
+  </data>
+	<data name="ProductImages" xml:space="preserve">
+    <value>صور المنتج</value>
+  </data>
+	<data name="SelectSize" xml:space="preserve">
+    <value>اختر المقاس</value>
+  </data>
+	<data name="Quantity" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+	<data name="AddToCart" xml:space="preserve">
+    <value>أضف إلى السلة</value>
+  </data>
+	<data name="AddedToCartSuccess" xml:space="preserve">
+    <value>تمت إضافة '{0}' إلى السلة بنجاح!</value>
+  </data>
+	<data name="KitStore" xml:space="preserve">
+    <value>متجر KIT</value>
+  </data>
+	<data name="StoreSubtitle" xml:space="preserve">
+    <value>منتجاتنا بلمسة تكنولوجية × فلسطينية</value>
+  </data>
+	<data name="Login" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+	<data name="WelcomeBack" xml:space="preserve">
+    <value>مرحباً بعودتك!</value>
+  </data>
+	<data name="Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+	<data name="RememberMe" xml:space="preserve">
+    <value>تذكرني</value>
+  </data>
+	<data name="ForgotPassword" xml:space="preserve">
+    <value>نسيت كلمة المرور؟</value>
+  </data>
+	<data name="LoginButton" xml:space="preserve">
+    <value>دخول</value>
+  </data>
+	<data name="DontHaveAccount" xml:space="preserve">
+    <value>ليس لديك حساب؟</value>
+  </data>
+	<data name="CreateNewAccount" xml:space="preserve">
+    <value>أنشئ حساباً جديداً</value>
+  </data>
+	<data name="RegisterSubtitle" xml:space="preserve">
+    <value>انضم إلينا وابدأ في تنظيم مهامك.</value>
+  </data>
+	<data name="UserName" xml:space="preserve">
+    <value>اسم المستخدم</value>
+  </data>
+	<data name="ConfirmPassword" xml:space="preserve">
+    <value>تأكيد كلمة المرور</value>
+  </data>
+	<data name="CreateAccountButton" xml:space="preserve">
+    <value>إنشاء الحساب</value>
+  </data>
+	<data name="AlreadyHaveAccount" xml:space="preserve">
+    <value>لديك حساب بالفعل؟</value>
+  </data>
+	<data name="MyTasksDashboard" xml:space="preserve">
+    <value>لوحة مهامي</value>
+  </data>
+	<data name="TaskDashboard" xml:space="preserve">
+    <value>لوحة التحكم بالمهام</value>
+  </data>
+	<data name="TaskDashboardSubtitle" xml:space="preserve">
+    <value>نظرة شاملة على مهامك اليومية والأسبوعية والشهرية.</value>
+  </data>
+	<data name="OverallTaskProgress" xml:space="preserve">
+    <value>سير إنجاز المهام الكلي</value>
+  </data>
+	<data name="Completed" xml:space="preserve">
+    <value>مكتملة</value>
+  </data>
+	<data name="AddNewTask" xml:space="preserve">
+    <value>إضافة مهمة جديدة</value>
+  </data>
+	<data name="TodaysTasks" xml:space="preserve">
+    <value>مهام اليوم</value>
+  </data>
+	<data name="WeeksTasks" xml:space="preserve">
+    <value>مهام الأسبوع</value>
+  </data>
+	<data name="MonthsTasks" xml:space="preserve">
+    <value>مهام الشهر</value>
+  </data>
+	<data name="Edit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+	<data name="Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+	<data name="DeleteConfirmation" xml:space="preserve">
+    <value>هل أنت متأكد من حذف هذه المهمة؟</value>
+  </data>
+	<data name="NoTasksForToday" xml:space="preserve">
+    <value>لا توجد مهام مجدولة لهذا اليوم.</value>
+  </data>
+	<data name="NoTasksForWeek" xml:space="preserve">
+    <value>لا توجد مهام مجدولة لهذا الأسبوع.</value>
+  </data>
+	<data name="NoTasksForMonth" xml:space="preserve">
+    <value>لا توجد مهام مجدولة لهذا الشهر.</value>
+  </data>
+	<data name="TaskTitle" xml:space="preserve">
+    <value>عنوان المهمة</value>
+  </data>
+	<data name="TaskTitlePlaceholder" xml:space="preserve">
+    <value>مثال: التحضير لاجتماع الفريق</value>
+  </data>
+	<data name="DueDate" xml:space="preserve">
+    <value>تاريخ الاستحقاق</value>
+  </data>
+	<data name="SaveTask" xml:space="preserve">
+    <value>حفظ المهمة</value>
+  </data>
+	<data name="TaskUpdateError" xml:space="preserve">
+    <value>حدث خطأ أثناء تحديث المهمة. يرجى تحديث الصفحة.</value>
+  </data>
+	<data name="Pending" xml:space="preserve">
+    <value>قيد الانتظار</value>
+  </data>
+	<data name="InProgress" xml:space="preserve">
+    <value>قيد التنفيذ</value>
+  </data>
+	<data name="Done" xml:space="preserve">
+    <value>مكتملة</value>
+  </data>
+	<data name="GetStarted" xml:space="preserve">
+    <value>ابدأ هنا</value>
+  </data>
+	<data name="Explore" xml:space="preserve">
+    <value>اكتشف</value>
+  </data>
+	<data name="Community" xml:space="preserve">
+    <value>المجتمع</value>
+  </data>
+	<data name="Company" xml:space="preserve">
+    <value>الشركة</value>
+  </data>
+	<data name="JoinTheTeam" xml:space="preserve">
+    <value>انضم للفريق</value>
+  </data>
+	<data name="Events" xml:space="preserve">
+    <value>الفعاليات</value>
+  </data>
+	<data name="Blog" xml:space="preserve">
+    <value>المدونة</value>
+  </data>
+	<data name="TermsOfService" xml:space="preserve">
+    <value>شروط الخدمة</value>
+  </data>
+	<data name="FAQ" xml:space="preserve">
+    <value>الأسئلة الشائعة</value>
+  </data>
+	<data name="Dashboard" xml:space="preserve">
+    <value>لوحة التحكم</value>
+  </data>
+	<data name="AllRightsReserved" xml:space="preserve">
+    <value>كل الحقوق محفوظة</value>
+  </data>
+	<data name="FooterDescription" xml:space="preserve">
+    <value>مجتمع تقني شبابي يهدف إلى بناء جسر بين الإبداع والمسؤولية المجتمعية.</value>
+  </data>
+	<data name="PrivacyPolicy" xml:space="preserve">
+    <value>سياسة الخصوصية</value>
+  </data>
+	<data name="Contact" xml:space="preserve">
+    <value>تواصل معنا</value>
+  </data>
+	<data name="Missions" xml:space="preserve">
+    <value>المهام</value>
+  </data>
+	<data name="Courses" xml:space="preserve">
+    <value>الدورات</value>
+  </data>
+	<data name="Store" xml:space="preserve">
+    <value>المتجر</value>
+  </data>
+
+</root>
