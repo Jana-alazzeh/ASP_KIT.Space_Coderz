@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using static System.Net.Mime.MediaTypeNames;
 
 //[Authorize]
 public class ProductsController : Controller
@@ -12,9 +15,9 @@ public class ProductsController : Controller
     {
         _db = db;
     }
-   
-    
-    //[Authorize(Roles = "Admin")] // 👈 فقط Admin يستطيع الدخول
+
+
+    //[Authorize(Roles = "Admin")] 
     public async Task<IActionResult> AdminIndex()
     {
         var products = await _db.Products.ToListAsync();
@@ -22,7 +25,7 @@ public class ProductsController : Controller
         return View(products);
     }
 
-    
+
     [HttpGet]
     //[Authorize(Roles = "Admin")]
     public IActionResult Create()
@@ -45,7 +48,7 @@ public class ProductsController : Controller
         return View(model);
     }
 
-   
+
     [HttpGet]
     //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int id)
@@ -116,13 +119,41 @@ public class ProductsController : Controller
 
     [HttpGet]
     [AllowAnonymous] // 👈 هذا الأكشن متاح للجميع
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
     public async Task<IActionResult> Index()
     {
-        // عرض المنتجات للبيع
-        var products = await _db.Products.ToListAsync();
-        return View(products); // يعرض Views/Products/Index.cshtml
+        // 1. استخدام AsNoTracking() لتسريع الاستعلام لأنه للقراءة فقط
+        // 2. جلب البيانات الضرورية فقط (اختياري ولكن يفضل)
+        var products = await _db.Products.AsNoTracking().ToListAsync();
+        return View(products);
     }
-    
+
+    private async Task<string> SaveImageAsWebP(IFormFile file)
+    {
+        if (file == null || file.Length == 0) return null;
+
+        var fileName = Guid.NewGuid().ToString() + ".webp";
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploade", "image");
+
+        if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+        var filePath = Path.Combine(uploadsFolder, fileName);
+
+        // بدلاً من استخدام Image.Load مباشرة، استخدم المسار الكامل لتجنب التضارب
+        using (var image = SixLabors.ImageSharp.Image.Load(file.OpenReadStream()))
+        {
+            if (image.Width > 1200)
+            {
+                image.Mutate(x => x.Resize(1200, 0));
+            }
+
+            await image.SaveAsWebpAsync(filePath);
+        }
+
+
+        return "/Uploade/image/" + fileName;
+    }
+
     public async Task<IActionResult> Details(int id)
     {
         var product = await _db.Products.FindAsync(id);

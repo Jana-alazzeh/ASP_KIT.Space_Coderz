@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks; 
 
-//[Authorize]
+[Authorize]
 public class CoursesController : Controller
 {
     private readonly AppDbContext _db;
@@ -35,7 +35,7 @@ public class CoursesController : Controller
 
 
     [HttpGet]
-    //[Authorize(Roles = "Admin, Trainer")]
+    [Authorize(Roles = "Admin, Trainer ,super admin")]
     public IActionResult Create()
     {
         return View();
@@ -43,7 +43,7 @@ public class CoursesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    //[Authorize(Roles = "Admin, Trainer")]
+    [Authorize(Roles = "Admin, Trainer ,super admin")]
     public async Task<IActionResult> Create(Course model)
     {
         if (ModelState.IsValid)
@@ -57,7 +57,7 @@ public class CoursesController : Controller
 
 
     [HttpGet]
-    //[Authorize(Roles = "Admin, Trainer")]
+    [Authorize(Roles = "Admin, Trainer ,super admin")]
     public async Task<IActionResult> Edit(int id)
     {
         var course = await _db.Courses.FindAsync(id);
@@ -67,7 +67,7 @@ public class CoursesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    //[Authorize(Roles = "Admin, Trainer")]
+    [Authorize(Roles = "Admin, Trainer ,super admin")]
     public async Task<IActionResult> Edit(Course model)
     {
         if (ModelState.IsValid)
@@ -80,7 +80,7 @@ public class CoursesController : Controller
     }
 
     [HttpGet]
-    //[Authorize(Roles = "Admin, Trainer")]
+    [Authorize(Roles = "Admin, Trainer ,super admin")]
     public async Task<IActionResult> AdminIndex()
     {
         var courses = await _db.Courses.ToListAsync();
@@ -90,7 +90,7 @@ public class CoursesController : Controller
    
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    //[Authorize(Roles = "Admin, Trainer")]
+    [Authorize(Roles = "Admin, Trainer, super admin")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var course = await _db.Courses.FindAsync(id);

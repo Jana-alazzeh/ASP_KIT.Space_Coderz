@@ -71,5 +71,25 @@ public class UserController : Controller
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
+
+
+
+
+
+
+    [HttpGet]
+    public async Task<IActionResult> Profile()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Login");
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        ViewBag.Roles = roles;
+
+        return View(user);
+    }
 }
 

@@ -26,19 +26,7 @@ namespace July_Team.Controllers
 
             return View();
         }
-        public IActionResult JoinUs()
-        {
-            return View();
-        }
-        public IActionResult Contact()
-        {
-            return View();
-        }
-
-             public IActionResult SubmitJoinRequest()
-        {
-            return View(); 
-        }
+      
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
