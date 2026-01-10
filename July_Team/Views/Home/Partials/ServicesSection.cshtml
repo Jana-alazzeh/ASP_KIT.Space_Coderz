@@ -1,0 +1,35 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@{
+    ViewData["Title"] = Localizar["Services"];
+}
+
+<section id="services" class="services-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5">@Localizar["OurServices"]</h2>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <img src="~/Uploade/image/photo_5836724950717809595_y.jpg" class="img-fluid rounded shadow" alt="Services">
+            </div>
+            <div class="col-md-6 ps-md-5">
+                <h3 class="fw-bolder">@Localizar["LearnCreateAchieve"]</h3>
+                <p class="lead my-3">
+                    @Localizar["ServicesDescription"]
+                </p>
+
+                <div class="mt-4 text-end">
+                    <a asp-controller="Courses" asp-action="Index"
+                       class="btn btn-outline-primary btn-lg rounded-pill fw-bold px-4 py-2"
+                       style="border-color:#0f2ea1; color:#0f2ea1; background-color:transparent;"
+                       onmouseover="this.style.backgroundColor='#0f2ea1'; this.style.color='white';"
+                       onmouseout="this.style.backgroundColor='transparent'; this.style.color='#0f2ea1';">
+                        @Localizar["OurCourses"]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,146 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@model July_Team.Models.ContactUsViewModel
+
+@{
+    ViewData["Title"] = Localizar["NavContact"];
+}
+
+@section Head {
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/july-team-theme.css">
+}
+
+<div class="contact-container">
+    <div class="container">
+        <!-- عنوان الصفحة -->
+        <div class="page-header">
+            <h1 class="page-title">@Localizar["NavContact"]</h1>
+            <p class="page-subtitle">@Localizar["ContactPageSubtitle"]</p>
+        </div>
+
+        <div class="row g-5">
+            <!-- نموذج التواصل -->
+            <div class="col-lg-7">
+                <div class="contact-form-container">
+                    <h3 class="form-section-title">@Localizar["SendUsAMessage"]</h3>
+                    <p class="form-section-subtitle">@Localizar["WillReplyASAP"]</p>
+
+                    <form asp-controller="ContactUs" asp-action="Index" method="post">
+
+                        @if (TempData["SuccessMessage"] != null)
+                        {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+                        }
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Name" class="form-label">@Localizar["FullName"] *</label>
+                                    <input type="text" id="Name" name="Name" class="form-control" required placeholder="@Localizar["EnterYourFullName"]">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Email" class="form-label">@Localizar["Email"] *</label>
+                                    <input type="email" id="Email" name="Email" class="form-control" required placeholder="example@email.com">
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="Subject" class="form-label">@Localizar["MessageSubject"] *</label>
+                                    <input type="text" id="Subject" name="Subject" class="form-control" required placeholder="@Localizar["SubjectPlaceholder"]">
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="Message" class="form-label">@Localizar["MessageText"] *</label>
+                                    <textarea id="Message" name="Message" class="form-control" rows="6" required placeholder="@Localizar["MessagePlaceholder"]"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="submit-btn">
+                                    <i class="bi bi-envelope-fill me-2"></i>
+                                    @Localizar["SendMessage"]
+                                </button>
+                            </div>
+                        </div>
+
+  
+
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- معلومات التواصل -->
+            <div class="col-lg-5">
+                <div class="contact-info-section">
+                    <h3 class="contact-info-title">@Localizar["DirectContactMethods"]</h3>
+
+                    <div class="contact-info-card">
+                        <div class="contact-icon"><i class="bi bi-telephone-fill"></i></div>
+                        <h5 class="contact-card-title">@Localizar["PhoneCall"]</h5>
+                        <p class="contact-card-description">@Localizar["PhoneDescription"]</p>
+                        <a href="tel:+9627xxxxxxxx" class="contact-link">+962 7xx xxx xxx</a>
+                    </div>
+
+                    <div class="contact-info-card">
+                        <div class="contact-icon"><i class="bi bi-envelope-open-fill"></i></div>
+                        <h5 class="contact-card-title">@Localizar["Email"]</h5>
+                        <p class="contact-card-description">@Localizar["EmailDescription"]</p>
+                        <a href="mailto:info@kitspace.com" class="contact-link">info@kitspace.com</a>
+                    </div>
+
+                    <div class="contact-info-card">
+                        <div class="contact-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                        <h5 class="contact-card-title">@Localizar["OurLocation"]</h5>
+                        <p class="contact-card-description">@Localizar["LocationDescription"]</p>
+                        <a href="#" class="contact-link">@Localizar["ViewOnMap"]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // تأثيرات تفاعلية للنموذج
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputs = document.querySelectorAll(".form-control");
+
+            inputs.forEach(input => {
+                input.addEventListener("focus", function () {
+                    this.style.transform = "scale(1.02)";
+                });
+
+                input.addEventListener("blur", function () {
+                    this.style.transform = "scale(1)";
+                });
+            });
+
+            // تأثير للبطاقات
+            const cards = document.querySelectorAll(".contact-info-card");
+            cards.forEach(card => {
+                card.addEventListener("mouseenter", function () {
+                    this.style.transform = "translateY(-8px) scale(1.02)";
+                });
+
+                card.addEventListener("mouseleave", function () {
+                    this.style.transform = "translateY(0) scale(1)";
+                });
+            });
+        });
+    </script>
+
+   
+}
+

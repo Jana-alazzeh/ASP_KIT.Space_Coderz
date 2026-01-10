@@ -1,0 +1,31 @@
+﻿@{
+
+	ViewData["Title"] = "Create_Role";
+}
+
+<div class="form-group">
+
+
+
+	<form asp-action="Create_Role" asp-controller="user">
+		@Html.AntiForgeryToken()
+<label>
+	Role Name
+</label>
+<br />
+<input class="form-control" type="text" name="role_name"placeholder=" ...role name" />
+<br />
+		<button  class="btn btn-info" type="submit">Create </button>
+		<a class="btn btn-dark"  asp-action="index" asp-controller="home">Back</a>
+</form>
+
+
+</div>
+
+<div>
+
+	@if (!(string.IsNullOrEmpty(ViewBag.err)))
+	{
+		<div class="text-danger">@ViewBag.err</div>
+	}
+</div>

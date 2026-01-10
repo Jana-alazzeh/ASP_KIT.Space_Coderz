@@ -14,7 +14,7 @@ namespace July_Team.Models
         public DbSet<Order> Orders { get; set; }     
         public DbSet<Course> Courses { get; set; }   
         public DbSet<Task> Tasks { get; set; }
-
+        public DbSet<JoinUsViewModel> JoinRequests { get; set; }
         public DbSet<ContactUsViewModel> ContactUs { get; set; }
 
 

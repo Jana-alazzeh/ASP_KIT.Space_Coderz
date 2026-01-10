@@ -1,0 +1,17 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@{
+    ViewData["Title"] = @Localizar["Home"];
+}
+
+<section class="hero-image">
+    <div class="content d-flex flex-column justify-content-center align-items-center text-center">
+        <h1>@Localizar["HeroTitle"]</h1>
+        <p>@Localizar["HeroSubtitle"]</p>
+        <div>
+            <a asp-action="Login" asp-controller="User" class="btn btn-outline-light btn-lg rounded-pill px-4 py-2 mx-1">@Localizar["Login"]</a>
+            <a asp-action="Register" asp-controller="User" class="btn btn-light btn-lg rounded-pill px-4 py-2 mx-1">@Localizar["Get Started"]</a>
+        </div>
+    </div>
+</section>

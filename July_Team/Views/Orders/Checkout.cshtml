@@ -1,0 +1,158 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@model July_Team.Models.CheckoutViewModel
+@{
+    ViewData["Title"] = Localizar["Checkout"];
+    Layout = "_Layout";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/CheckOut.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+}
+
+<div class="container">
+    <header class="checkout-header">
+        <h1>@Localizar["Checkout"]</h1>
+    </header>
+
+    <main class="checkout-main">
+        <div class="checkout-content">
+            <section class="shipping-section">
+                <h2>@Localizar["ShippingAndDeliveryInfo"]</h2>
+
+                @* عرض ملخص الأخطاء إذا وجدت *@
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <form id="checkout-form" method="post" action="@Url.Action("ProcessCheckout", "Orders" )">
+                    @Html.AntiForgeryToken()
+
+                    @* --- الجزء الهام جداً: إرسال بيانات المنتجات في الخفاء --- *@
+                    @for (int i = 0; i < Model.Items.Count; i++)
+                    {
+                        @Html.HiddenFor(m => m.Items[i].ProductId)
+                        @Html.HiddenFor(m => m.Items[i].ProductName)
+                        @Html.HiddenFor(m => m.Items[i].Quantity)
+                        @Html.HiddenFor(m => m.Items[i].UnitPrice)
+                        @Html.HiddenFor(m => m.Items[i].Size)
+                    }
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ShippingFullName, Localizar["FullName"] + " *")
+                            @Html.TextBoxFor(m => m.ShippingFullName, new { @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(m => m.ShippingFullName, "", new { @class = "error-message text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ShippingAddress, Localizar["DetailedAddress"] + " *")
+                            @Html.TextAreaFor(m => m.ShippingAddress, new { rows = 3, @class = "form-control", required = "required", placeholder = Localizar["AddressPlaceholder"] })
+                            @Html.ValidationMessageFor(m => m.ShippingAddress, "", new { @class = "error-message text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ShippingPhoneNumber, Localizar["PhoneNumber"] + " *")
+                            @Html.TextBoxFor(m => m.ShippingPhoneNumber, new { type = "tel", @class = "form-control", required = "required", placeholder = "07xxxxxxxx" })
+                            @Html.ValidationMessageFor(m => m.ShippingPhoneNumber, "", new { @class = "error-message text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Notes, Localizar["DeliveryNotes"])
+                            @Html.TextAreaFor(m => m.Notes, new { rows = 2, @class = "form-control", placeholder = Localizar["NotesPlaceholder"] })
+                        </div>
+                    </div>
+
+                    <div class="payment-method-section">
+                        <h3>@Localizar["PaymentMethod"]</h3>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                @Html.RadioButtonFor(m => m.PaymentMethod, "CashOnDelivery", new { @checked = "checked" })
+                                <span class="payment-icon">💵</span>
+                                <span class="payment-text">@Localizar["CashOnDelivery"]</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <aside class="order-summary">
+            <div class="summary-card">
+                <h3>@Localizar["OrderSummary"]</h3>
+                <div id="order-items" class="order-items">
+                    @if (Model.Items.Any())
+                    {
+                        @foreach (var item in Model.Items)
+                        {
+                            <div class="order-item">
+                                <span class="item-name">@item.ProductName (@item.Size) x @item.Quantity</span>
+                                <span class="item-price">@((item.UnitPrice * item.Quantity).ToString("F2")) @Localizar["Currency"]</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">@Localizar["NoProductsInCart"]</p>
+                    }
+                </div>
+
+                <div class="order-totals">
+                    <div class="total-row">
+                        <span>@Localizar["Subtotal"]:</span>
+                        <span id="subtotal">@Model.SubTotal.ToString("F2") @Localizar["Currency"]</span>
+                    </div>
+                    <div class="total-row">
+                        <span>@Localizar["ShippingFee"]:</span>
+                        <span id="shipping-fee">@Model.ShippingFee.ToString("F2") @Localizar["Currency"]</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>@Localizar["GrandTotal"]:</span>
+                        <span id="grand-total">@Model.GrandTotal.ToString("F2") @Localizar["Currency"]</span>
+                    </div>
+                </div>
+
+                <button type="button" id="place-order-btn" class="place-order-btn">
+                    <span class="btn-text">@Localizar["ConfirmOrder"]</span>
+                    <span class="btn-icon">🛒</span>
+                </button>
+            </div>
+        </aside>
+    </main>
+</div>
+
+@* Modal التوجيه النهائي *@
+<div id="order-confirmation-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>@Localizar["ConfirmOrder"]</h3>
+        </div>
+        <div class="modal-body">
+            <p>@Localizar["ConfirmOrderPrompt"]</p>
+            <div class="confirmation-details">
+                <div class="detail-row">
+                    <span>@Localizar["GrandTotal"]:</span>
+                    <span id="confirmation-total">@Model.GrandTotal.ToString("F2") @Localizar["Currency"]</span>
+                </div>
+                <div class="detail-row">
+                    <span>@Localizar["PaymentMethod"]:</span>
+                    <span>@Localizar["CashOnDelivery"]</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="cancel-order" class="btn-secondary">@Localizar["Cancel"]</button>
+            <button type="button" id="confirm-order" class="btn-primary">@Localizar["ConfirmOrder"]</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/checkout-script.js" asp-append-version="true"></script>
+}

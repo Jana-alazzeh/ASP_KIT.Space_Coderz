@@ -1,0 +1,79 @@
+﻿@model IEnumerable<July_Team.Models.Order>
+
+@{
+    ViewData["Title"] = "إدارة طلبات الشراء";
+    Layout = "_Layout";
+}
+
+<div class="kit-page-header">
+    <h2 class="kit-title">إدارة طلبات الشراء</h2>
+    <p class="kit-subtitle">متابعة ومعالجة جميع الطلبات الواردة.</p>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreatedAt) 
+                        </th>
+                        <th>
+                            العميل
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TotalPrice) 
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Status) 
+                        </th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @item.CreatedAt.ToShortDateString() 
+                            </td>
+                            <td>
+                              
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
+                            <td>
+                                @item.TotalPrice.ToString("N0") JD
+                            </td>
+                            <td>
+                                @{
+                                   
+                                    string status = item.Status ?? "Pending"; 
+                                    string badgeClass = status switch
+                                    {
+                                        "Pending" => "badge-warning",
+                                        "Shipped" => "badge-info",
+                                        "Completed" => "badge-success",
+                                        _ => "badge-secondary"
+                                    };
+                                }
+                                <span class="badge @badgeClass">
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </span>
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">عرض التفاصيل</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

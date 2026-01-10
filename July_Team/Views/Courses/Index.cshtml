@@ -1,0 +1,157 @@
+﻿@model IEnumerable<July_Team.Models.Course>
+
+@{
+    ViewData["Title"] = "دوراتنا التدريبية";
+}
+<div class="courses-section-fullwidth">
+    <div class="container-fluid">
+        <div class="text-center mb-5 px-3">
+            <h2 class="section-title">Latest Workshops</h2>
+            <p class="lead text-muted">Join our professional tech programs and level up your skills</p>
+        </div>
+
+        @if (Model.Any())
+        {
+            <div class="horizontal-scroll-container px-4" id="courseSlider">
+                @foreach (var course in Model)
+                {
+                    <div class="course-card-scroll light-ad-style">
+                       
+
+                        <div class="image-wrapper">
+                            <img src="@(string.IsNullOrEmpty(course.ImageUrl) ? "https://via.placeholder.com/600x400.png?text=KIT+Space" : course.ImageUrl )" alt="@course.Title">
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">@course.Title</h5>
+
+                            <p class="trainer-info">
+                                <i class="bi bi-person-circle"></i> @course.TrainerName
+                            </p>
+
+                            <p class="card-description">@course.Description</p>
+
+                            <div class="ad-info-grid">
+                                <div class="info-item">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <span>@course.StartDate.ToString("MMM dd")</span>
+                                </div>
+                                <div class="info-item border-start">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span>@course.Duration</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    /* للتأكد من أن الحاوية تأخذ العرض الكامل بشكل صحيح */
+    .container-fluid {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    /* البطاقة بستايل فاتح ونظيف */
+    .light-ad-style {
+        flex: 0 0 320px;
+        background-color: #ffffff; /* خلفية بيضاء ناصعة */
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* ظل خفيف جداً */
+        border: 1px solid #eef0f7;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+    }
+
+        .light-ad-style:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(3, 43, 167, 0.1);
+        }
+
+    /* شارة السعر */
+    .price-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #032ba7; /* أزرق براندك */
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-weight: 700;
+        z-index: 10;
+        font-size: 13px;
+    }
+
+    /* تحسين الصورة لتكون بداخل إطار */
+    .image-wrapper {
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+    }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    /* نصوص البطاقة */
+    .light-ad-style .card-title {
+        color: #1a1a1a; /* أسود مريح */
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+    }
+
+    .trainer-info {
+        color: #032ba7; /* اسم المدرب بلون البراند */
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+
+    .card-description {
+        color: #666; /* رمادي للوصف */
+        font-size: 0.85rem;
+        line-height: 1.6;
+        height: 3.2em; /* سطرين فقط */
+        overflow: hidden;
+    }
+
+    /* تفاصيل الإعلان في الأسفل */
+    .ad-info-grid {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #f0f2f9;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #444;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+        .info-item i {
+            color: #032ba7;
+        }
+
+    /* خط العنوان الرئيسي */
+    .section-title {
+        color: #032ba7;
+        font-weight: 800;
+        font-size: 2.5rem;
+    }
+</style>

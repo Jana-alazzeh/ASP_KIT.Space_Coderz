@@ -1,0 +1,164 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@{
+    ViewData["Title"] = Localizar["JoinUsTitle"];
+}
+
+@section Head {
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/july-team-theme.css">
+}
+
+<div class="join-container">
+    <div class="container">
+        <!-- عنوان الصفحة -->
+        <div class="page-header">
+            <h1 class="page-title">@Localizar["JoinKitFamily"]</h1>
+            <p class="page-subtitle">@Localizar["JoinUsPageSubtitle"]</p>
+        </div>
+
+        <!-- نموذج الانضمام -->
+        <div class="join-form-container">
+            <h2 class="form-section-title">@Localizar["ApplicationForm"]</h2>
+            <p class="form-section-subtitle">@Localizar["LookingForCreatives"]</p>
+
+            @model July_Team.Models.JoinUsViewModel
+
+<form asp-controller="JoinUs" asp-action="SubmitJoinRequest" method="post">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="form-section">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-person-fill"></i></div>
+            @Localizar["PersonalInfo"]
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="FullName" class="form-label">@Localizar["FullName"] *</label>
+                    <input asp-for="FullName" class="form-control" placeholder="@Localizar["EnterYourFullName"]" required>
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">@Localizar["Email"] *</label>
+                    <input asp-for="Email" class="form-control" placeholder="example@email.com" required>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Phone" class="form-label">@Localizar["PhoneNumber"] *</label>
+                    <input asp-for="Phone" class="form-control" placeholder="07xxxxxxxx" required>
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Field" class="form-label">@Localizar["FieldOfInterest"] *</label>
+                    <select asp-for="Field" class="form-select" required>
+                        <option value="">-- @Localizar["SelectField"] --</option>
+                        <option value="Tech">@Localizar["FieldTech"]</option>
+                        <option value="Design">@Localizar["FieldDesign"]</option>
+                        <option value="Community">@Localizar["FieldCommunity"]</option>
+                        <option value="Marketing">@Localizar["FieldMarketing"]</option>
+                        <option value="Business">@Localizar["FieldBusiness"]</option>
+                    </select>
+                    <span asp-validation-for="Field" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-gear-fill"></i></div>
+            @Localizar["ExperienceAndSkills"]
+        </div>
+        <div class="form-group">
+            <label asp-for="Experience" class="form-label">@Localizar["TechExperienceSummary"] *</label>
+            <textarea asp-for="Experience" class="form-control" rows="5" placeholder="@Localizar["ExperiencePlaceholder"]" required></textarea>
+            <span asp-validation-for="Experience" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Portfolio" class="form-label">@Localizar["PortfolioLink"]</label>
+            <input asp-for="Portfolio" class="form-control" placeholder="https://PORTFOILO.com/username">
+            <span asp-validation-for="Portfolio" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-heart-fill"></i></div>
+            @Localizar["MotivationsAndGoals"]
+        </div>
+        <div class="form-group">
+            <label asp-for="Motivation" class="form-label">@Localizar["WhyJoinKit"] *</label>
+            <textarea asp-for="Motivation" class="form-control" rows="4" placeholder="@Localizar["MotivationPlaceholder"]" required></textarea>
+            <span asp-validation-for="Motivation" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Contribution" class="form-label">@Localizar["HowCanYouContributeToKit"] *</label>
+            <textarea asp-for="Contribution" class="form-control" rows="4" placeholder="@Localizar["ContributionPlaceholder"]" required></textarea>
+            <span asp-validation-for="Contribution" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="submit-btn">
+            <i class="bi bi-send-fill me-2"></i>
+            @Localizar["SubmitApplication"]
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        // تأثيرات تفاعلية للنموذج
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputs = document.querySelectorAll(".form-control, .form-select");
+
+            inputs.forEach(input => {
+                input.addEventListener("focus", function () {
+                    this.style.transform = "scale(1.02)";
+                });
+
+                input.addEventListener("blur", function () {
+                    this.style.transform = "scale(1)";
+                });
+            });
+
+            // تأثير للبطاقات
+            const cards = document.querySelectorAll(".benefit-card");
+            cards.forEach(card => {
+                card.addEventListener("mouseenter", function () {
+                    this.style.transform = "translateY(-8px) scale(1.02)";
+                });
+
+                card.addEventListener("mouseleave", function () {
+                    this.style.transform = "translateY(0) scale(1)";
+                });
+            });
+
+            // تحديد عدد الكلمات في حقل الخبرة
+            const experienceField = document.getElementById("Experience");
+            if (experienceField) {
+                experienceField.addEventListener("input", function () {
+                    const words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
+                    if (words.length > 300) {
+                        alert("تجاوزت الحد الأقصى للكلمات (300 كلمة).");
+                        this.value = words.slice(0, 300).join(" ");
+                    }
+                });
+            }
+        });
+    </script>
+}

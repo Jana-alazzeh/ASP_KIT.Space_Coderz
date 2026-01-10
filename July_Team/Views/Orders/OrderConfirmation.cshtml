@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Order Confirmation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* المسافة العلوية لتبتعد عن الـ Navbar *@
+<div class="container mt-5 pt-5 mb-5">
+
+    @* استخدام كلاس البطاقة الكبيرة card-large الخاص بثيمك *@
+    <div class="card-large text-center fade-in mx-auto shadow-lg border-0"
+         style="max-width: 800px; border-radius: 25px; background: rgba(255, 255, 255, 0.95); padding: 60px 20px;">
+
+        <div class="card-body">
+            @* الأيقونة باللون الكحلي المتدرج *@
+            <div class="mb-4">
+                <div class="contact-icon mx-auto"
+                     style="background: linear-gradient(135deg, #032BA7 0%, #1e5fd9 100%); width: 120px; height: 120px;">
+                    <i class="bi bi-bag-check-fill text-white" style="font-size: 4rem;"></i>
+                </div>
+            </div>
+
+            <h1 class="display-5 fw-bold" style="color: #032BA7; font-family: 'Cairo', sans-serif;">Thank You!</h1>
+
+            <p class="lead mt-3 fw-semibold" style="color: #4a5568; font-family: 'Cairo', sans-serif;">
+                Your order has been placed successfully.
+            </p>
+
+            @* تنبيه بتصميم الثيم *@
+            <div class="alert mt-4 d-inline-block px-4"
+                 style="background: rgba(3, 43, 167, 0.05); color: #032BA7; border-radius: 15px; border: 1px solid rgba(3, 43, 167, 0.1);">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                Our team will review your order and contact you shortly for confirmation.
+            </div>
+
+            <hr class="my-5 mx-auto" style="width: 40%; border-top: 2px solid rgba(3, 43, 167, 0.1);">
+
+            @* الأزرار بنفس تصميم ثيمك *@
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mt-4">
+                <a href="@Url.Action("Index", "Home")"
+                   class="btn btn-primary btn-large px-5 py-3 shadow"
+                   style="background: #032BA7; border-radius: 50px; font-family: 'Cairo', sans-serif;">
+                    <i class="bi bi-house-door me-2"></i> Back to Home
+                </a>
+
+                <a href="@Url.Action("MyOrders", "Orders")"
+                   class="btn btn-secondary btn-large px-5 py-3"
+                   style="border: 2px solid #032BA7; color: #032BA7; background: transparent; border-radius: 50px; font-family: 'Cairo', sans-serif;">
+                    <i class="bi bi-list-ul me-2"></i> View My Orders
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* التأكد من تطبيق الخط العربي Cairo */
+    body {
+        font-family: 'Cairo', sans-serif;
+    }
+
+    /* أنيميشن الدخول الناعم */
+    .fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    /* تأثير الحركية عند تمرير الماوس على البطاقة */
+    .card-large {
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        backdrop-filter: blur(10px);
+    }
+
+        .card-large:hover {
+            transform: translateY(-10px);
+        }
+
+    /* تحسين شكل الأزرار عند التحويم */
+    .btn-primary:hover {
+        background: #021d73 !important;
+        transform: scale(1.05);
+        transition: 0.3s;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(3, 43, 167, 0.05) !important;
+        transform: scale(1.05);
+        transition: 0.3s;
+    }
+</style>

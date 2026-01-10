@@ -1,0 +1,43 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@model IEnumerable<July_Team.Models.Product>
+
+@{
+    ViewData["Title"] = Localizar["KitStore"];
+}
+
+<div class="store-page-background">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h1 style="color: #032ba7; font-weight: bold;">@Localizar["KitStore"]</h1>
+            <p class="lead" style="color: #032ba7;">@Localizar["StoreSubtitle"]</p>
+        </div>
+
+        <div class="row justify-content-center g-4">
+            @foreach (var product in Model)
+            {
+                <div class="col-lg-3 col-md-6 col-12">
+                    <a href="/Products/Details/@product.Id" class="text-decoration-none">
+                        <div class="product-card-hover h-100">
+                            <div class="product-images-container">
+                                <img src="@product.ImageUrl" alt="@product.Name - Front" />
+                                <img src="@(string.IsNullOrEmpty(product.ImageUrl_Back) ? product.ImageUrl : product.ImageUrl_Back)" alt="@product.Name - Back" />
+                            </div>
+                            <div class="product-card-info">
+                                <h5 class="fw-bold text-dark">@product.Name</h5>
+                                <h4 class="fw-bold" style="color: #032ba7;">@product.Price.ToString("N0") JD</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/site.css" />
+}

@@ -438,9 +438,6 @@
   <data name="AddToCart" xml:space="preserve">
     <value>AddToCart</value>
   </data>
-  <data name="AddedToCartSuccess" xml:space="preserve">
-    <value>AddedToCartSuccess</value>
-  </data>
   <data name="KitStore" xml:space="preserve">
     <value>KitStore</value>
   </data>

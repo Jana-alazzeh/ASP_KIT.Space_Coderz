@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using July_Team.Models;
 
-
 namespace July_Team.Controllers
 {
     public class ContactUsController : Controller
@@ -20,18 +19,27 @@ namespace July_Team.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(ContactUsViewModel model)
+        [ValidateAntiForgeryToken]
+        public IActionResult SubmitJoinRequest(JoinUsViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.ContactUs.Add(model);
+                // 1. الحفظ أولاً
+                _context.JoinRequests.Add(model);
                 _context.SaveChanges();
-                ViewBag.Message = "تم إرسال رسالتك بنجاح ✅";
-                ModelState.Clear();
-                return View();
+
+                // 2. إعداد رسالة النجاح
+                TempData["SuccessMessage"] = "Your application has been submitted successfully! ✅";
+
+                // 3. إعادة التوجيه (هذا يفرغ الفورم تلقائياً)
+                return RedirectToAction("Index");
             }
 
-            return View(model);
+            // إذا فشل التحقق (مثلاً إيميل خطأ)، ارجع للفيو مع إظهار الأخطاء
+            return View("Index", model);
         }
     }
 }
+
+
+

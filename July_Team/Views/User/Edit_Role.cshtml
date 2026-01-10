@@ -1,0 +1,29 @@
+﻿@{
+
+	ViewData["Title"] = "Edit Roles";
+}
+
+@model UserRolesViewModel
+<h3> Edit Role For @Model.Email</h3>
+
+<form asp-action="Edit_Role" method="post">
+	<input type="hidden" asp-for="UserId" />
+	<input type="hidden" asp-for="Email" />
+	
+	<ul>
+		@foreach(var role in Model.Roles)
+		{
+			<li>
+				<input type="checkbox" name="Roles[@Model.Roles.IndexOf(role)].IsSelected"
+			value="true" @(role.IsSelected ?"checked" :"") />
+
+			<label>@role.RoleName</label>
+			<input type="hidden" name="Roles[@Model.Roles.IndexOf(role)].RoleName" value="@role.RoleName" />
+			</li>
+
+		}
+
+
+	</ul>
+<button class="btn btnalert-secondary" type="submit">Save</button>
+</form>

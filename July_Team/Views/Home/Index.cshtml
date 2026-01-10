@@ -1,0 +1,37 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+@using July_Team.Models
+@{
+    ViewData["Title"] = "الصفحة الرئيسية - KIT Space";
+    Layout = "_Layout";
+
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<section class="home-section">
+@* استدعاء القسم الترحيبي (Home Section) *@
+@await Html.PartialAsync("Partials/HomeSection")
+</section>
+@* استدعاء قسم "من نحن" (About Us Section) *@
+@await Html.PartialAsync("Partials/AboutUsSection")
+@* هنا يمكنكِ إضافة استدعاءات لأقسام أخرى مثل الخدمات، المنتجات، إلخ. *@
+@* استدعاء قسم الخدمات (Services Section) *@
+@await Html.PartialAsync("Partials/ServicesSection")
+
+
+@* @section Scripts {
+    @{
+
+        <script>
+            document.body.classList.add('home-page');
+          </script>
+    }
+}
+
+ *@
+

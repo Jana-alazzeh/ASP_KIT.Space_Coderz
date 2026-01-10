@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<IdentityUser>
+@using July_Team.Models
+
+
+
+<h2>Users</h2>
+<table class="table">
+    <tr>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    @* @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Email</td>
+            @if (User.IsInRole("admin"))
+            { 
+                <td>
+                    <a class="btn btn-primary" asp-controller="user" asp-action="Edit_Role" asp-route-id="@user.Id">Edit Roles</a>
+                </td>
+            } 
+        </tr>
+    } *@
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="User" asp-action="Edit_Role" asp-route-id="@user.Id">Edit Roles</a>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="2">No users found.</td>
+        </tr>
+    }
+
+</table>

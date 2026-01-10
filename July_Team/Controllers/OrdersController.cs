@@ -10,8 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Threading.Tasks; // تحديد استخدام Task من System.Threading.Tasks
+using System.Threading.Tasks; 
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace July_Team.Controllers
 {
@@ -26,12 +27,7 @@ namespace July_Team.Controllers
             _userManager = userManager;
         }
 
-        // ===============================================
-        // صفحة الشيك أوت
-        // ===============================================
-        // في OrdersController.cs
-        // في OrdersController.cs
-
+       
         [HttpGet]
         public IActionResult Checkout()
         {
@@ -55,7 +51,7 @@ namespace July_Team.Controllers
                     Size = item.Size
                 }).ToList(),
 
-                // 1. نحن نحسب المجموع الفرعي هنا
+               
                 SubTotal = cart.Items.Sum(item => item.Price * item.Quantity),
 
                 // 2. رسوم الشحن لها قيمة افتراضية في الـ ViewModel (3.00m)، لذلك لا داعي لتعيينها هنا
@@ -87,101 +83,70 @@ namespace July_Team.Controllers
             HttpContext.Session.SetString("Cart", cartJson);
         }
 
-        // ===============================================
-        // معالجة طلب الشيك أوت
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async System.Threading.Tasks.Task<IActionResult> ProcessCheckout(CheckoutViewModel model)
-
+        public async Task<IActionResult> ProcessCheckout(CheckoutViewModel model)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return Json(new { success = false, message = "بيانات غير صحيحة" });
+                    return View("Checkout", model);
                 }
 
-                // الحصول على معرف المستخدم الحالي
-                string userId = null;
-                if (User.Identity.IsAuthenticated)
-                {
-                    userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                }
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                // إنشاء طلبات منفصلة لكل منتج (حسب هيكل Order الحالي)
-                var orders = new List<Order>();
+                // ✅ 1. تعريف القائمة هنا (خارج الفور إيتش)
+                var ordersList = new List<Order>();
 
                 foreach (var item in model.Items)
                 {
-                    // التحقق من وجود المنتج وتوفر الكمية
                     var product = await _db.Products.FindAsync(item.ProductId);
-                    if (product == null)
+                    if (product != null && product.Stock >= item.Quantity)
                     {
-                        return Json(new { success = false, message = $"المنتج {item.ProductName} غير موجود" });
+                        var order = new Order
+                        {
+                            UserId = userId,
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity,
+                            TotalPrice = item.UnitPrice * item.Quantity,
+                            Status = "Pending",
+                            CreatedAt = DateTime.UtcNow
+                        };
+
+                        // ✅ 2. إضافة الطلب للقائمة
+                        ordersList.Add(order);
+
+                        product.Stock -= item.Quantity;
+                        _db.Products.Update(product);
                     }
-
-                    if (product.Stock < item.Quantity)
-                    {
-                        return Json(new { success = false, message = $"الكمية المطلوبة من {product.Name} غير متوفرة" });
-                    }
-
-                    // إنشاء طلب جديد
-                    var order = new Order
-                    {
-                        UserId = userId,
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        TotalPrice = item.UnitPrice * item.Quantity,
-                        Status = "Pending",
-                        CreatedAt = DateTime.UtcNow
-                    };
-
-                    orders.Add(order);
-
-                    // تقليل المخزون
-                    product.Stock -= item.Quantity;
-                    _db.Products.Update(product);
                 }
 
-                // حفظ الطلبات في قاعدة البيانات
-                await _db.Orders.AddRangeAsync(orders);
+                // ✅ 3. الآن سطر الحفظ سيعمل لأن ordersList معرفة في هذا النطاق
+                await _db.Orders.AddRangeAsync(ordersList);
                 await _db.SaveChangesAsync();
 
-                // مسح السلة من الـ Session بعد إتمام الطلب بنجاح
                 HttpContext.Session.Remove("Cart");
 
-                // إرسال إشعار أو بريد إلكتروني (اختياري)
-                await SendOrderConfirmationEmail(model, orders);
+                // تأكدي أن الميثود أدناه تستقبل ordersList وليس orders
+                await SendOrderConfirmationEmail(model, ordersList);
 
                 return RedirectToAction("OrderConfirmation");
-
             }
             catch (Exception ex)
             {
-                // تسجيل الخطأ
-                // _logger.LogError(ex, "خطأ في معالجة طلب الشراء");
-
-                return Json(new
-                {
-                    success = false,
-                    message = "حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى."
-                });
+                ModelState.AddModelError("", "حدث خطأ: " + ex.Message);
+                return View("Checkout", model);
             }
         }
-
-        // ===============================================
-        // صفحة تأكيد الطلب
-        // ===============================================
         [HttpGet]
         public IActionResult OrderConfirmation()
         {
             return View();
         }
 
-        // ===============================================
-        // لوحة التحكم - عرض جميع طلبات الشراء (للإدارة)
-        // ===============================================
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "super admin, Admin")]
         public async System.Threading.Tasks.Task<IActionResult> AdminIndex()
         {
             var orders = await _db.Orders
@@ -192,10 +157,7 @@ namespace July_Team.Controllers
             return View(orders);
         }
 
-        // ===============================================
-        // تفاصيل طلب الشراء
-        // ===============================================
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "super admin,Admin")]
         public async System.Threading.Tasks.Task<IActionResult> Details(int id)
         {
             var order = await _db.Orders
@@ -206,12 +168,9 @@ namespace July_Team.Controllers
             return View(order);
         }
 
-        // ===============================================
-        // تغيير حالة طلب الشراء
-        // ===============================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "super admin,Admin")]
         public async System.Threading.Tasks.Task<IActionResult> UpdateStatus(int id, string newStatus)
         {
             var order = await _db.Orders.FindAsync(id);
@@ -224,9 +183,7 @@ namespace July_Team.Controllers
             return RedirectToAction(nameof(AdminIndex));
         }
 
-        // ===============================================
-        // طلبات المستخدم الحالي
-        // ===============================================
+        
         [HttpGet]
         [Authorize]
         public async System.Threading.Tasks.Task<IActionResult> MyOrders()
@@ -242,13 +199,8 @@ namespace July_Team.Controllers
             return View(orders);
         }
 
-        // ===============================================
-        // إرسال بريد تأكيد الطلب (دالة مساعدة)
-        // ===============================================
         private async System.Threading.Tasks.Task SendOrderConfirmationEmail(CheckoutViewModel model, List<Order> orders)
         {
-            // هنا يمكن إضافة منطق إرسال البريد الإلكتروني
-            // مثال: استخدام SendGrid أو SMTP
 
             try
             {
@@ -263,16 +215,14 @@ namespace July_Team.Controllers
             await System.Threading.Tasks.Task.CompletedTask; // ضمان إرجاع Task
         }
 
-        // ===============================================
-        // API للحصول على تفاصيل المنتج (للاستخدام في JavaScript)
-        // ===============================================
+       
         [HttpGet]
         public async System.Threading.Tasks.Task<IActionResult> GetProductDetails(int productId)
         {
             var product = await _db.Products.FindAsync(productId);
             if (product == null)
             {
-                return Json(new { success = false, message = "المنتج غير موجود" });
+                return Json(new { success = false, message = "Product not found" });
             }
 
             return Json(new
@@ -288,5 +238,8 @@ namespace July_Team.Controllers
                 }
             });
         }
+
+
+       
     }
 }

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<July_Team.Models.Course>
+@{
+    ViewData["Title"] = "إدارة الدورات"; Layout = "_Layout";
+}
+
+<div class="kit-page-header"><h2 class="kit-title">لوحة تحكم الدورات</h2></div>
+<p class="mb-4"><a asp-action="Create" class="btn btn-success">إضافة دورة جديدة</a></p>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Title)</th>
+                        <th>@Html.DisplayNameFor(model => model.TrainerName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Price)</th>
+                        <th>@Html.DisplayNameFor(model => model.Duration)</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.TrainerName</td>
+                            <td>@item.Price.ToString("C")</td>
+                            <td>@item.Duration</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">تعديل</a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('هل أنت متأكد؟');">
+                                    <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
