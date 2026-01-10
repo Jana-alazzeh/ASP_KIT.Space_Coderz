@@ -1,0 +1,242 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@model IEnumerable<July_Team.Models.Task>
+
+@{
+    ViewData["Title"] = Localizar["MyTasksDashboard"];
+    int progress = ViewBag.ProgressPercentage ?? 0;
+    var today = DateTime.Today;
+    var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
+    var endOfWeek = startOfWeek.AddDays(6);
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="font-bold">@Localizar["TaskDashboard"]</h2>
+        <p class="text-gray">@Localizar["TaskDashboardSubtitle"]</p>
+    </div>
+
+ 
+    <div class="card card-small mb-4 shadow-sm">
+        <h5 class="font-semibold mb-2 text-primary">@Localizar["OverallTaskProgress"]:</h5>
+        <div class="progress" role="progressbar" style="height: 25px; border-radius: var(--border-radius-small);">
+            <div class="progress-bar" style="width: @progress%; background: var(--gradient-primary); border-radius: var(--border-radius-small);"
+                 aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="100">
+                <span class="font-semibold">@progress% @Localizar["Completed"]</span>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary btn-small float-end mb-3 shadow-button" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+        <i class="bi bi-plus-circle-fill me-2"></i> @Localizar["AddNewTask"]
+    </button>
+
+    <div class="clearfix"></div>
+
+    
+    <ul class="nav nav-tabs" id="taskPlannerTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="daily-tab" data-bs-toggle="tab" data-bs-target="#daily-tasks" type="button" role="tab">@Localizar["TodaysTasks"]</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="weekly-tab" data-bs-toggle="tab" data-bs-target="#weekly-tasks" type="button" role="tab">@Localizar["WeeksTasks"]</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="monthly-tab" data-bs-toggle="tab" data-bs-target="#monthly-tasks" type="button" role="tab">@Localizar["MonthsTasks"]</button>
+        </li>
+    </ul>
+
+   
+    <div class="tab-content bg-white p-3 shadow-sm" id="taskPlannerTabsContent" style="border: 1px solid #dee2e6; border-top: none; border-radius: 0 0 var(--border-radius) var(--border-radius);">
+
+        
+        <div class="tab-pane fade show active" id="daily-tasks" role="tabpanel">
+            @if (Model.Any(t => t.DueDate.Date == today))
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in Model.Where(t => t.DueDate.Date == today).OrderBy(t => t.DueDate))
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div class="d-flex align-items-center">
+                                <input class="form-check-input task-checkbox me-3" type="checkbox" value="@item.Id" id="task-@item.Id" @(item.Status == July_Team.Models.TaskStatus.Done ? "checked" : "")>
+                                <label class="form-check-label @(item.Status == July_Team.Models.TaskStatus.Done ? "text-decoration-line-through text-muted" : "")" for="task-@item.Id">@item.Title</label>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="badge rounded-pill @(item.Status == July_Team.Models.TaskStatus.Done ? "bg-success" : "bg-warning text-dark") me-3">@Localizar[item.Status.ToString()]</span>
+                                <a href="/Tasks/Edit/@item.Id" class="btn btn-sm btn-outline-primary me-2">@Localizar["Edit"]</a>
+                                <form method="post" action="/Tasks/Delete/@item.Id" style="display: inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('@Localizar["DeleteConfirmation"]')">@Localizar["Delete"]</button>
+                                </form>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-center text-muted p-4">@Localizar["NoTasksForToday"]</p>
+            }
+        </div>
+
+        <div class="tab-pane fade" id="weekly-tasks" role="tabpanel">
+            @if (Model.Any(t => t.DueDate.Date >= startOfWeek && t.DueDate.Date <= endOfWeek))
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in Model.Where(t => t.DueDate.Date >= startOfWeek && t.DueDate.Date <= endOfWeek).OrderBy(t => t.DueDate))
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div class="d-flex align-items-center">
+                                <input class="form-check-input task-checkbox me-3" type="checkbox" value="@item.Id" id="task-@item.Id" @(item.Status == July_Team.Models.TaskStatus.Done ? "checked" : "")>
+                                <label class="form-check-label @(item.Status == July_Team.Models.TaskStatus.Done ? "text-decoration-line-through text-muted" : "")" for="task-@item.Id">@item.Title</label>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="badge rounded-pill @(item.Status == July_Team.Models.TaskStatus.Done ? "bg-success" : "bg-warning text-dark") me-3">@Localizar[item.Status.ToString()]</span>
+                                <a href="/Tasks/Edit/@item.Id" class="btn btn-sm btn-outline-primary me-2">@Localizar["Edit"]</a>
+                                <form method="post" action="/Tasks/Delete/@item.Id" style="display: inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('@Localizar["DeleteConfirmation"]')">@Localizar["Delete"]</button>
+                                </form>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-center text-muted p-4">@Localizar["NoTasksForWeek"]</p>
+            }
+        </div>
+
+     
+        <div class="tab-pane fade" id="monthly-tasks" role="tabpanel">
+            @if (Model.Any(t => t.DueDate.Year == today.Year && t.DueDate.Month == today.Month))
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in Model.Where(t => t.DueDate.Year == today.Year && t.DueDate.Month == today.Month).OrderBy(t => t.DueDate))
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div class="d-flex align-items-center">
+                                <input class="form-check-input task-checkbox me-3" type="checkbox" value="@item.Id" id="task-@item.Id" @(item.Status == July_Team.Models.TaskStatus.Done ? "checked" : "")>
+                                <label class="form-check-label @(item.Status == July_Team.Models.TaskStatus.Done ? "text-decoration-line-through text-muted" : "")" for="task-@item.Id">@item.Title</label>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="badge rounded-pill @(item.Status == July_Team.Models.TaskStatus.Done ? "bg-success" : "bg-warning text-dark") me-3">@Localizar[item.Status.ToString()]</span>
+                                <a href="/Tasks/Edit/@item.Id" class="btn btn-sm btn-outline-primary me-2">@Localizar["Edit"]</a>
+                                <form method="post" action="/Tasks/Delete/@item.Id" style="display: inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('@Localizar["DeleteConfirmation"]')">@Localizar["Delete"]</button>
+                                </form>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-center text-muted p-4">@Localizar["NoTasksForMonth"]</p>
+            }
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addTaskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-lg">
+            <form asp-action="QuickCreate" method="post">
+                <div class="modal-header" style="background: var(--gradient-primary); color: white;">
+                    <h5 class="modal-title font-semibold">@Localizar["AddNewTask"]</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Title" class="form-label">@Localizar["TaskTitle"]</label>
+                        <input name="Title" type="text" class="form-control" required placeholder="@Localizar["TaskTitlePlaceholder"]">
+                    </div>
+                    <div class="form-group">
+                        <label for="DueDate" class="form-label">@Localizar["DueDate"]</label>
+                        <input name="DueDate" type="date" class="form-control" value="@today.ToString("yyyy-MM-dd")">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizar["Cancel"]</button>
+                    <button type="submit" class="btn btn-primary">@Localizar["SaveTask"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+ 
+    <link rel="stylesheet" href="~/css/july-team-theme.css" />
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+
+            
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+
+                    const taskId = this.value;
+                    const isChecked = this.checked;
+
+                   
+                    fetch(`/Tasks/ToggleStatus/${taskId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                          
+                            if (!response.ok) {
+                                throw new Error('Server returned an error!');
+                            }
+                           
+                            return response.json();
+                        })
+                        .then(data => {
+                     
+                            const progressBar = document.querySelector('.progress-bar');
+                            const progressText = progressBar.querySelector('span');
+
+                            
+                            progressBar.style.width = data.progress + '%';
+                            progressBar.setAttribute('aria-valuenow', data.progress);
+                            progressText.textContent = `${data.progress}% ${'@Localizar["Completed"]'}`;
+
+                      
+                            const listItem = this.closest('li');
+                            const label = listItem.querySelector('label');
+                            const badge = listItem.querySelector('.badge');
+
+                            if (isChecked) {
+                                label.classList.add('text-decoration-line-through', 'text-muted');
+                                badge.classList.replace('bg-warning', 'bg-success');
+                                badge.classList.remove('text-dark');
+                                badge.textContent = 'Done';
+                            } else {
+                                label.classList.remove('text-decoration-line-through', 'text-muted');
+                                badge.classList.replace('bg-success', 'bg-warning');
+                                badge.classList.add('text-dark');
+                                badge.textContent = 'Pending';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error updating task:', error);
+                            alert('@Localizar["TaskUpdateError"]');
+                            this.checked = !isChecked;
+                        });
+                });
+            });
+        });
+    </script>
+
+
+}

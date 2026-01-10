@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="@System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName"
+      dir="@(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - KIT Space</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    @await RenderSectionAsync("Styles", required: false)
+    @await RenderSectionAsync("Head", required: false)
+</head>
+<body>
+    <header>
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/Uploade/image/Animate_logo-removebg-preview.png" alt="KIT Space Logo" style="height: 60px;">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@Localizar["NavHome"]</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#about-us">@Localizar["NavAbout"]</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#services">@Localizar["NavServices"]</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">@Localizar["NavStore"]</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Tasks" asp-action="Index">@Localizar["NavMission"]</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="JoinUs" asp-action="Index">@Localizar["NavJoinUs"]</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ContactUs" asp-action="Index">@Localizar["NavContact"]</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Cart" asp-action="Index">
+                                <i class="bi bi-cart"></i> @Localizar["NavCart"]
+                            </a>
+                        </li>
+
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Orders" asp-action="MyOrders">
+                                    <i class="bi bi-list-check"></i> My Orders
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="User" asp-action="Profile">
+                                    <i class="bi bi-person-circle"></i> @User.Identity.Name.Split('@')[0]
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="User" asp-action="Login">
+                                    <i class="bi bi-box-arrow-in-right"></i> @Localizar["Login"]
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        <div class="language-switch">
+                            @{
+                                var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+                            }
+                            @if (currentCulture.StartsWith("ar"))
+                            {
+                                <a class="lang-btn" asp-action="ChangeLanguage" asp-controller="Home" asp-route-culture="en"
+                                   asp-route-returnUrl="@Context.Request.Path">En</a>
+                            }
+                            else
+                            {
+                                <a class="lang-btn" asp-action="ChangeLanguage" asp-controller="Home" asp-route-culture="ar"
+                                   asp-route-returnUrl="@Context.Request.Path">Ar</a>
+                            }
+                        </div>
+                    </ul>
+                </div>
+
+
+        </nav>
+    </header>
+
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer style="background-color: #f8f9fa; padding: 45px 0 20px; font-size: 15px; line-height: 24px; color: #737373; border-top: 1px solid #e5e5e5;">
+
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-lg col-md-4 col-6" style="margin-bottom: 30px;">
+                    <h6 style="color: #212529; font-size: 16px; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; font-weight: 700;">@Localizar["GetStarted"]</h6>
+                    <ul style="padding-left: 0; list-style: none;">
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="User" asp-action="Register" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["CreateNewAccount"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="User" asp-action="Login" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Login"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Tasks" asp-action="Index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["MyTasksDashboard"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Cart" asp-action="Index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["NavCart"]</a></li>
+                    </ul>
+                </div>
+
+
+                <div class="col-lg col-md-4 col-6" style="margin-bottom: 30px;">
+                    <h6 style="color: #212529; font-size: 16px; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; font-weight: 700;">@Localizar["Explore"]</h6>
+                    <ul style="padding-left: 0; list-style: none;">
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Home" asp-action="Index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Home"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Courses" asp-action="Index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Courses"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Products" asp-action="Index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Store"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Home" asp-action="Missions" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Missions"]</a></li>
+                    </ul>
+                </div>
+
+                >
+                <div class="col-lg col-md-4 col-6" style="margin-bottom: 30px;">
+                    <h6 style="color: #212529; font-size: 16px; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; font-weight: 700;">@Localizar["Community"]</h6>
+                    <ul style="padding-left: 0; list-style: none;">
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Home" asp-action="JoinUs" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["JoinTheTeam"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a href="#" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Events"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a href="#" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Blog"]</a></li>
+                    </ul>
+                </div>
+
+
+                <div class="col-lg col-md-6 col-6" style="margin-bottom: 30px;">
+                    <h6 style="color: #212529; font-size: 16px; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; font-weight: 700;">@Localizar["Company"]</h6>
+                    <ul style="padding-left: 0; list-style: none;">
+                        <li style="display: block; margin-bottom: 10px;"><a href="/#about-us" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["AboutUs"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Home" asp-action="Contact" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Contact"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Home" asp-action="Privacy" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["PrivacyPolicy"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a href="#" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["TermsOfService"]</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-12 text-lg-end text-center mt-4 mt-lg-0" style="margin-bottom: 30px;">
+                    <a asp-controller="Home" asp-action="Index">
+                        <img src="~/Uploade/image/Animate_logo-removebg-preview.png" alt="KIT Logo" style="height: 60px; margin-bottom: 1rem;">
+                    </a>
+                    <p class="copyright-text mb-3" style="font-size: 14px; color: #737373;">
+                        @Localizar["FooterDescription"]
+                    </p>
+                    <ul class="social-icons justify-content-center justify-content-lg-end" style="padding-left: 0; margin-top: 20px; list-style: none; display: flex;">
+                        <li style="display: inline-block; margin-right: 15px;"><a href="#" style="background-color: #eceeef; color: #818a91; font-size: 16px; display: inline-block; line-height: 44px; width: 44px; height: 44px; text-align: center; border-radius: 100%;"><i class="bi bi-facebook"></i></a></li>
+                        <li style="display: inline-block; margin-right: 15px;"><a href="#" style="background-color: #eceeef; color: #818a91; font-size: 16px; display: inline-block; line-height: 44px; width: 44px; height: 44px; text-align: center; border-radius: 100%;"><i class="bi bi-instagram"></i></a></li>
+                        <li style="display: inline-block; margin-right: 15px;"><a href="#" style="background-color: #eceeef; color: #818a91; font-size: 16px; display: inline-block; line-height: 44px; width: 44px; height: 44px; text-align: center; border-radius: 100%;"><i class="bi bi-linkedin"></i></a></li>
+                        <li style="display: inline-block; margin-right: 15px;"><a href="#" style="background-color: #eceeef; color: #818a91; font-size: 16px; display: inline-block; line-height: 44px; width: 44px; height: 44px; text-align: center; border-radius: 100%;"><i class="bi bi-github"></i></a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <hr style="border-top-color: #bbb; opacity: 0.5; margin-top: 20px; margin-bottom: 20px;">
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="copyright-text" style="margin: 0; font-size: 14px; color: #5a72c2; font-weight: 500;">
+                        &copy; @DateTime.Now.Year KIT. @Localizar["AllRightsReserved"].
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const navbar = document.querySelector('.navbar');
+            const navLinksContainer = document.querySelector('.navbar-nav.flex-grow-1');
+            if (!navbar || !navLinksContainer) return;
+
+
+            document.body.style.paddingTop = `${navbar.offsetHeight + 20}px`;
+
+            const homeSection = document.querySelector('.home-section');
+            if (homeSection) {
+                homeSection.style.marginTop = `-${navbar.offsetHeight + 20}px`;
+            }
+
+            const capsule = document.createElement('div');
+            capsule.classList.add('capsule-indicator');
+            navLinksContainer.prepend(capsule);
+
+            function moveCapsule(target) {
+                if (!target) {
+                    capsule.style.opacity = '0';
+                    return;
+                }
+                capsule.style.left = `${target.offsetLeft}px`;
+                capsule.style.top = `${target.offsetTop}px`;
+                capsule.style.width = `${target.offsetWidth}px`;
+                capsule.style.height = `${target.offsetHeight}px`;
+                capsule.style.opacity = '1';
+            }
+
+
+            function setActiveLink() {
+                const currentPath = window.location.pathname.toLowerCase();
+                const allLinks = navLinksContainer.querySelectorAll('.nav-link');
+                let activeLink = null;
+
+
+                for (let link of allLinks) {
+                    const linkPath = new URL(link.href).pathname.toLowerCase();
+                    if (currentPath === linkPath) {
+                        activeLink = link;
+                        break;
+                    }
+                }
+
+                if (!activeLink && currentPath === '/') {
+
+                    activeLink = navLinksContainer.querySelector('a[href="/"], a[href*="/Home/Index"]');
+                }
+
+
+                allLinks.forEach(link => link.classList.remove('active'));
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+                moveCapsule(activeLink);
+            }
+            const sectionsToObserve = [];
+            const linksToObserve = navLinksContainer.querySelectorAll('a[href*="#"]');
+
+            linksToObserve.forEach(link => {
+                const id = link.getAttribute('href').split('#')[1];
+                if (id) {
+                    const section = document.getElementById(id);
+                    if (section) {
+                        sectionsToObserve.push({ link: link, section: section });
+                    }
+                }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const correspondingLink = sectionsToObserve.find(s => s.section === entry.target)?.link;
+                        if (correspondingLink) {
+                            navLinksContainer.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                            correspondingLink.classList.add('active');
+                            moveCapsule(correspondingLink);
+                        }
+                    }
+                });
+            }, {
+                rootMargin: "-50% 0px -50% 0px"
+            });
+
+            sectionsToObserve.forEach(item => observer.observe(item.section));
+
+            setTimeout(setActiveLink, 150);
+            window.addEventListener('resize', setActiveLink);
+        });
+
+
+    </script>
+
+</body>
+</html>

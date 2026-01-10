@@ -1,0 +1,35 @@
+﻿@model IEnumerable<July_Team.Models.Product>
+@{
+    ViewData["Title"] = "إدارة المتجر"; Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+    <p><a asp-action="Create" class="btn btn-success">إضافة منتج جديد</a></p>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Name)</th>
+                <th>@Html.DisplayNameFor(model => model.Price)</th>
+                <th>@Html.DisplayNameFor(model => model.Stock)</th>
+                <th>الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("N0") JD</td>
+                    <td>@item.Stock</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">تعديل</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('متأكدة؟');">
+                            <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

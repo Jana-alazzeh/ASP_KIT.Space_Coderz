@@ -1,0 +1,29 @@
+﻿@model July_Team.Models.Course
+@{
+    ViewData["Title"] = "تعديل الدورة"; Layout = "_Layout";
+}
+
+<div class="kit-page-header"><h2 class="kit-title">تعديل: @Model.Title</h2></div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow p-4">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <div class="form-group mb-3"><label asp-for="Title"></label><input asp-for="Title" class="form-control" /><span asp-validation-for="Title" class="text-danger"></span></div>
+                <div class="form-group mb-3"><label asp-for="Description"></label><textarea asp-for="Description" class="form-control" rows="4"></textarea><span asp-validation-for="Description" class="text-danger"></span></div>
+                <div class="form-group mb-3"><label asp-for="TrainerName"></label><input asp-for="TrainerName" class="form-control" /><span asp-validation-for="TrainerName" class="text-danger"></span></div>
+                <div class="row">
+                    <div class="col-md-6 form-group mb-3"><label asp-for="StartDate"></label><input asp-for="StartDate" class="form-control" /><span asp-validation-for="StartDate" class="text-danger"></span></div>
+                    <div class="col-md-6 form-group mb-3"><label asp-for="EndDate"></label><input asp-for="EndDate" class="form-control" /><span asp-validation-for="EndDate" class="text-danger"></span></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group mb-3"><label asp-for="Price"></label><input asp-for="Price" class="form-control" type="number" step="0.01" /><span asp-validation-for="Price" class="text-danger"></span></div>
+                    <div class="col-md-6 form-group mb-3"><label asp-for="Duration"></label><input asp-for="Duration" class="form-control" placeholder="مثال: 4 أسابيع" /><span asp-validation-for="Duration" class="text-danger"></span></div>
+                </div>
+                <div class="form-group mb-4"><label asp-for="ImageUrl"></label><input asp-for="ImageUrl" class="form-control" placeholder="رابط صورة الدورة (URL)" /><span asp-validation-for="ImageUrl" class="text-danger"></span></div>
+                <div class="form-group"><button type="submit" class="btn btn-primary">حفظ التعديلات</button><a asp-action="AdminIndex" class="btn btn-secondary">العودة</a></div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+﻿@model July_Team.Models.Product
+@{
+    ViewData["Title"] = "إنشاء منتج جديد"; Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3"><label asp-for="Name"></label><input asp-for="Name" class="form-control" /></div>
+        <div class="mb-3"><label asp-for="Description"></label><textarea asp-for="Description" class="form-control"></textarea></div>
+        <div class="mb-3"><label asp-for="Price"></label><input asp-for="Price" class="form-control" /></div>
+        <div class="mb-3"><label asp-for="Stock"></label><input asp-for="Stock" class="form-control" /></div>
+        <div class="mb-3"><label asp-for="ImageUrl"></label><input asp-for="ImageUrl" class="form-control" placeholder="مثال: /images/tshirt.png" /></div>
+        <div class="mb-3">
+            <label asp-for="ImageUrl_Back"></label>
+            <input asp-for="ImageUrl_Back" class="form-control" placeholder="رابط الصورة الخلفية (اختياري)" />
+        </div>
+
+        <button type="submit" class="btn btn-success">حفظ</button>
+        <a asp-action="AdminIndex" class="btn btn-secondary">إلغاء</a>
+    </form>
+</div>

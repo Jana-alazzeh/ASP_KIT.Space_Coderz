@@ -1,0 +1,119 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@model July_Team.Models.CartViewModel
+
+@{
+    ViewData["Title"] = Localizar["ShoppingCart"];
+}
+
+<style>
+        .cart-container {
+            background-color: #e3e8f8;
+            background-image: url('/images/kuffiyeh_pattern.png');
+            padding: 50px 0;
+        }
+
+        .cart-card {
+            max-width: 800px;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .quantity-controls .btn {
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                line-height: 1;
+                padding: 0;
+            }
+</style>
+
+<div class="cart-container">
+    <div class="card cart-card">
+        <div class="card-body p-4 p-md-5">
+
+            @if (Model.Items.Any())
+            {
+                <h3 class="text-center mb-5 fw-bold" style="color: #032ba7;">@Localizar["CartContents"]</h3>
+
+                @foreach (var item in Model.Items)
+                {
+                    <div class="cart-item d-flex justify-content-between align-items-center mb-4">
+                        <div class="d-flex align-items-center">
+                            <img src="@item.ImageUrl" alt="@item.ProductName" class="me-3">
+                            <div>
+                                <h5 class="fw-bold mb-0">@item.ProductName</h5>
+                                @if (!string.IsNullOrEmpty(item.Size))
+                                {
+                                    <small class="text-muted">@Localizar["Size"]: @item.Size</small>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-4">
+                            <h5 class="fw-bold mb-0" style="color: #032ba7;">@item.Price.ToString("N0") JD</h5>
+
+                            <div class="quantity-controls">
+                                <form asp-action="UpdateQuantity" method="post" class="d-inline">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="size" value="@item.Size" />
+                                    <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
+                                    <button type="submit" class="btn btn-outline-secondary">+</button>
+                                </form>
+                                <span>@item.Quantity</span>
+                                <form asp-action="UpdateQuantity" method="post" class="d-inline">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="size" value="@item.Size" />
+                                    <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
+                                    <button type="submit" class="btn btn-outline-secondary">-</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-end align-items-center">
+                    <h4 class="fw-bold mb-0 me-3">@Localizar["GrandTotal"]:</h4>
+                    <h3 class="fw-bolder mb-0" style="color: #032ba7;">@Model.GrandTotal.ToString("N0") JD</h3>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <a asp-controller="Orders" asp-action="Checkout" class="btn btn-primary btn-lg fw-bold">
+                        @Localizar["ProceedToCheckout"] <i class="bi bi-cart-check ms-2"></i>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-cart-x" style="font-size: 5rem; color: #ccc;"></i>
+                    <h4 class="mt-3">@Localizar["CartIsEmpty"]</h4>
+                    <p class="text-muted">@Localizar["CartEmptyDescription"]</p>
+                    <a asp-controller="Products" asp-action="Index" class="btn btn-primary mt-3">@Localizar["BrowseProducts"]</a>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+

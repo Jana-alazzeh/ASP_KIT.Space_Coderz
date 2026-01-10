@@ -1,0 +1,150 @@
+﻿@model IEnumerable<July_Team.Models.Order>
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "_Layout";
+}
+
+@* المسافة العلوية mt-5 و pt-5 لتبتعد عن الـ Nav *@
+<div class="container mt-5 pt-5 mb-5">
+
+    @* العناوين والوصف بالوسط تماماً *@
+    <div class="page-header text-center fade-in mb-5">
+        <h1 class="page-title" style="color: #032BA7;">My Orders</h1>
+        <p class="page-subtitle">Track and manage your recent purchases and order history</p>
+
+        <div class="mt-3">
+            <span class="badge-total">
+                Total Orders: @Model.Count()
+            </span>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card-large text-center fade-in mx-auto shadow-lg" style="max-width: 700px; border-radius: 25px;">
+            <div class="contact-icon mx-auto mb-4" style="background: linear-gradient(135deg, #032BA7 0%, #1e5fd9 100%);">
+                <i class="bi bi-cart-x"></i>
+            </div>
+            <h2 style="color: #032BA7;" class="fw-bold">No orders found!</h2>
+            <p class="text-muted">It looks like you haven't made any purchases yet.</p>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-large mt-3" style="background: #032BA7; border-radius: 50px;">Start Shopping</a>
+        </div>
+    }
+    else
+    {
+        @* البطاقة الزجاجية الرئيسية بالحواف المدورة *@
+        <div class="card-large p-0 overflow-hidden fade-in shadow-lg border-0" style="border-radius: 25px; background: rgba(255, 255, 255, 0.9);">
+            <div class="table-responsive">
+                @* الكلام بالوسط text-center *@
+                <table class="table table-hover align-middle text-center mb-0">
+                    <thead>
+                        <tr style="background-color: #032BA7; color: white;">
+                            <th class="p-4 border-0">Order ID</th>
+                            <th class="p-4 border-0 text-start">Product Details</th>
+                            <th class="p-4 border-0">Date</th>
+                            <th class="p-4 border-0">Quantity</th>
+                            <th class="p-4 border-0">Total Price</th>
+                            <th class="p-4 border-0">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr style="border-bottom: 1px solid rgba(3, 43, 167, 0.1);">
+                                <td class="p-4 fw-bold" style="color: #032BA7;">#@order.Id</td>
+                                <td class="p-4 text-start">
+                                    <div class="d-flex align-items-center">
+                                        @if (order.Product != null)
+                                        {
+                                            <img src="@order.Product.ImageUrl" alt="@order.Product.Name"
+                                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 15px; border: 2px solid #e2e8f0;" class="me-3">
+                                            <div>
+                                                <div class="fw-bold" style="color: #032BA7;">@order.Product.Name</div>
+                                                <small class="text-muted">Premium Art Piece</small>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Archive Item</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="p-4" style="color: #4a5568;">@order.CreatedAt.ToString("dd MMM yyyy")</td>
+                                <td class="p-4">
+                                    <span class="qnt-badge">@order.Quantity</span>
+                                </td>
+                                <td class="p-4 fw-bold" style="color: #032BA7; font-size: 1.1rem;">
+                                    @order.TotalPrice.ToString("F2") JOD
+                                </td>
+                                <td class="p-4">
+                                    @{
+                                        var statusColor = order.Status switch
+                                        {
+                                            "Pending" => "#856404",
+                                            "Shipped" => "#0c5460",
+                                            "Completed" => "#155724",
+                                            "Cancelled" => "#721c24",
+                                            _ => "#4a5568"
+                                        };
+                                        var statusBg = order.Status switch
+                                        {
+                                            "Pending" => "#fff3cd",
+                                            "Shipped" => "#d1ecf1",
+                                            "Completed" => "#d4edda",
+                                            "Cancelled" => "#f8d7da",
+                                            _ => "#e2e8f0"
+                                        };
+                                    }
+                                    <span class="status-pill" style="background: @statusBg; color: @statusColor;">
+                                        @order.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    /* تنسيقات إضافية تعتمد على اللون 032BA7 */
+    .badge-total {
+        background: white;
+        color: #032BA7;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 700;
+        border: 2px solid #032BA7;
+        box-shadow: 0 4px 10px rgba(3, 43, 167, 0.1);
+    }
+
+    .qnt-badge {
+        background: rgba(3, 43, 167, 0.1);
+        color: #032BA7;
+        padding: 5px 15px;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+    .status-pill {
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: inline-block;
+        min-width: 100px;
+    }
+
+    /* تأثير الـ Hover على الصفوف */
+    .table-hover tbody tr:hover {
+        background-color: rgba(3, 43, 167, 0.05) !important;
+        transition: 0.3s;
+    }
+
+    .table th {
+        font-family: 'Cairo', sans-serif;
+        letter-spacing: 0.5px;
+    }
+</style>

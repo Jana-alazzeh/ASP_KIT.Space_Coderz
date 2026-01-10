@@ -1,0 +1,71 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@model RegesterModel
+@{
+    ViewData["Title"] = Localizar["CreateNewAccount"];
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="@System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName"
+      dir="@(System.Threading.Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - KIT Space</title>
+
+    @if (System.Threading.Thread.CurrentThread.CurrentUICulture.TextInfo.IsRightToLeft)
+    {
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" />
+    }
+    else
+    {
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    }
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="auth-container">
+        <div class="card auth-card p-5">
+            <div class="text-center mb-4">
+                <h3 style="color: #032ba7; font-weight: bold;">@Localizar["CreateNewAccount"]</h3>
+                <p class="text-muted">@Localizar["RegisterSubtitle"]</p>
+            </div>
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="User_Name" class="form-control" placeholder=" " style="border-radius: 10px;" />
+                    <label asp-for="User_Name">@Localizar["UserName"]</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="User_Email" class="form-control" placeholder=" " style="border-radius: 10px;" />
+                    <label asp-for="User_Email">@Localizar["Email"]</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Password" class="form-control" placeholder=" " style="border-radius: 10px;" />
+                    <label asp-for="Password">@Localizar["Password"]</label>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Confirm_Password" class="form-control" placeholder=" " style="border-radius: 10px;" />
+                    <label asp-for="Confirm_Password">@Localizar["ConfirmPassword"]</label>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg" style="background-color: #032ba7; border-radius: 50px;">@Localizar["CreateAccountButton"]</button>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <small class="text-muted">@Localizar["AlreadyHaveAccount"] <a asp-action="Login" style="color: #032ba7; text-decoration: none; font-weight: bold;">@Localizar["Login"]</a></small>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

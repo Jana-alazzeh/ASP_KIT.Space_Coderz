@@ -1,0 +1,25 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
+
+@{
+    ViewData["Title"] = Localizar["AboutUs"];
+}
+
+<section id="about-us" class="about-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5">@Localizar["WhoWeAre"]</h2>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <img src="~/Uploade/image/photo_5895589272805822798_y (1).jpg" class="img-fluid rounded shadow" alt="About Us">
+            </div>
+            <div class="col-md-6 ps-md-5">
+                <h3 class="fw-bold">@Localizar["KitSpace"]</h3>
+                <p class="lead mt-3">
+                    @Localizar["AboutUsDescription"]
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
