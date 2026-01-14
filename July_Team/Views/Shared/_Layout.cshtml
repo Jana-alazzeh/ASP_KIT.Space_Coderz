@@ -90,7 +90,8 @@
 
 
     <main role="main">
-        @RenderBody()
+            @RenderBody()
+        </div>
     </main>
 
     <footer style="background-color: #f8f9fa; padding: 45px 0 20px; font-size: 15px; line-height: 24px; color: #737373; border-top: 1px solid #e5e5e5;">
@@ -117,7 +118,7 @@
                         <li style="display: block; margin-bottom: 10px;"><a asp-controller="Home" asp-action="Index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Home"]</a></li>
                         <li style="display: block; margin-bottom: 10px;"><a asp-controller="Courses" asp-action="Index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Courses"]</a></li>
                         <li style="display: block; margin-bottom: 10px;"><a asp-controller="Products" asp-action="Index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Store"]</a></li>
-                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Home" asp-action="Missions" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Missions"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Tasks" asp-action="Index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Missions"]</a></li>
                     </ul>
                 </div>
 
@@ -125,7 +126,7 @@
                 <div class="col-lg col-md-4 col-6" style="margin-bottom: 30px;">
                     <h6 style="color: #212529; font-size: 16px; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; font-weight: 700;">@Localizar["Community"]</h6>
                     <ul style="padding-left: 0; list-style: none;">
-                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="Home" asp-action="JoinUs" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["JoinTheTeam"]</a></li>
+                        <li style="display: block; margin-bottom: 10px;"><a asp-controller="JoinUs" asp-action="index" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["JoinTheTeam"]</a></li>
                         <li style="display: block; margin-bottom: 10px;"><a href="#" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Events"]</a></li>
                         <li style="display: block; margin-bottom: 10px;"><a href="#" style="color: #0e2e9e; text-decoration: none; font-weight: 500;">@Localizar["Blog"]</a></li>
                     </ul>

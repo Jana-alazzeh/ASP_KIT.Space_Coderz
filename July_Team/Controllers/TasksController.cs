@@ -1,10 +1,12 @@
 ﻿using July_Team.Models;
+using July_Team.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Security.Claims; 
-
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System; // تمت إضافة هذا السطر لضمان عمل DateTime
 
 public class TasksController : Controller
 {
@@ -17,250 +19,226 @@ public class TasksController : Controller
         _userManager = userManager;
     }
 
-    public async Task<IActionResult> Index()
+    // دالة مركزية للحصول على هوية المستخدم
+    private string GetCurrentUserId()
     {
-        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(currentUserId))
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
         {
-            currentUserId = "user-id-for-testing"; // المستخدم الوهمي
+            return "user-id-for-testing";
         }
+        return userId;
+    }
 
+    // دالة مركزية لحساب الإحصائيات
+    private async Task<TaskDashboardViewModel> GetDashboardStatsAsync()
+    {
+        var userId = GetCurrentUserId();
         var userTasks = await _db.Tasks
-                                 .Where(t => t.OwnerId == currentUserId)
+                                 .Where(t => t.OwnerId == userId)
                                  .ToListAsync();
 
-        // ==================== الكود الجديد لحساب نسبة الإنجاز ====================
-        int totalTasks = userTasks.Count;
-        int doneTasks = userTasks.Count(t => t.Status == July_Team.Models.TaskStatus.Done);
+        var totalTasks = userTasks.Count;
+        // ===== التعديل الأول هنا =====
+        var doneTasks = userTasks.Count(t => t.Status == July_Team.Models.TaskStatus.Done);
+        var progress = (totalTasks > 0) ? (int)Math.Round((double)doneTasks * 100 / totalTasks) : 0;
 
-        // حساب النسبة المئوية (مع تجنب القسمة على صفر)
-        int progressPercentage = (totalTasks > 0) ? (int)Math.Round((double)doneTasks / totalTasks * 100) : 0;
-
-        // إرسال النسبة إلى الـ View
-        ViewBag.ProgressPercentage = progressPercentage;
-        // ==================== نهاية الكود الجديد ====================
-
-        // الآن نعرض صفحة Index.cshtml ونمرر لها قائمة المهام
-        return View(userTasks);
+        return new TaskDashboardViewModel
+        {
+            TotalTasks = totalTasks,
+            PendingTasks = totalTasks - doneTasks,
+            ProgressPercentage = progress
+        };
     }
 
+    // Action الرئيسي للعرض
+    public async Task<IActionResult> Index()
+    {
+        var viewModel = await GetDashboardStatsAsync();
+        return View(viewModel);
+    }
+
+    // Action لجلب المهام بشكل ديناميكي (AJAX)
     [HttpGet]
-    public IActionResult Create()
+    public async Task<IActionResult> GetTasksPartial(string filter = "daily")
     {
-        // لم نعد بحاجة لـ PopulateUsersDropdown
-        return View();
-    }
+        var userId = GetCurrentUserId();
+        var query = _db.Tasks.Where(t => t.OwnerId == userId);
 
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> Create(July_Team.Models.Task model)
-    //{
-    //    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    //    if (string.IsNullOrEmpty(currentUserId))
-    //    {
-    //        return Unauthorized(); // أو توجيه لصفحة الدخول
-    //    }
-
-    //    // تعيين مالك المهمة تلقائياً ليكون المستخدم الحالي
-    //    model.OwnerId = currentUserId;
-
-    //    _db.Tasks.Add(model);
-    //    await _db.SaveChangesAsync();
-    //    return RedirectToAction(nameof(Index));
-    //}
-
-
-    [HttpPost]
-    // [ValidateAntiForgeryToken] // اتركيه معطلاً حالياً
-    public async Task<IActionResult> Create(July_Team.Models.Task model)
-    {
-        // ==================== بداية الكود المؤقت (للتطوير) ====================
-
-        // نحاول الحصول على المستخدم الحقيقي
-        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        // إذا لم نجد مستخدماً (لأننا لم نسجل دخولنا)، نستخدم ID افتراضي مؤقت
-        if (string.IsNullOrEmpty(currentUserId))
+        var today = DateTime.Today;
+        switch (filter.ToLower())
         {
-            currentUserId = "user-id-for-testing"; // <-- هذا هو المستخدم الوهمي
+            case "weekly":
+                var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
+                var endOfWeek = startOfWeek.AddDays(6);
+                query = query.Where(t => t.DueDate.Date >= startOfWeek && t.DueDate.Date <= endOfWeek);
+                break;
+            case "all":
+                break;
+            case "daily":
+            default:
+                query = query.Where(t => t.DueDate.Date == today);
+                break;
         }
 
-        // ==================== نهاية الكود المؤقت ====================
+        var tasks = await query.OrderBy(t => t.DueDate).ToListAsync();
+        return PartialView("_TaskList", tasks);
+    }
 
+    // Action لإنشاء مهمة سريعة (AJAX)
+    [HttpPost]
+    public async Task<IActionResult> QuickCreate([FromForm] string Title, [FromForm] DateTime DueDate)
+    {
+        if (string.IsNullOrWhiteSpace(Title))
+        {
+            return Json(new { success = false, message = "Task title is required." });
+        }
 
-        // الآن، سيتم تعيين المهمة دائماً للمستخدم الوهمي
-        model.OwnerId = currentUserId;
+        // تم استخدام النموذج Task من Models وليس من System.Threading.Tasks
+        var newTask = new July_Team.Models.Task
+        {
+            Title = Title,
+            DueDate = DueDate,
+            OwnerId = GetCurrentUserId(),
+            // ===== التعديل الثاني هنا =====
+            Status = July_Team.Models.TaskStatus.Pending,
+            Description = ""
+        };
 
-        _db.Tasks.Add(model);
+        _db.Tasks.Add(newTask);
         await _db.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+
+        var newStats = await GetDashboardStatsAsync();
+        return Json(new { success = true, newStats });
     }
-   
+
+    // Action لتغيير حالة المهمة (AJAX)
     [HttpPost]
-    public async Task<IActionResult> QuickCreate(string Title, DateTime DueDate)
+    public async Task<IActionResult> ToggleStatus(int id)
     {
-        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(currentUserId))
+        var userId = GetCurrentUserId();
+        var task = await _db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.OwnerId == userId);
+
+        if (task == null)
         {
-            currentUserId = "user-id-for-testing";
+            return NotFound(new { success = false, message = "Task not found." });
         }
 
-       
-        if (!string.IsNullOrEmpty(Title))
-        {
-            
-            var newTask = new July_Team.Models.Task
-            {
-                Title = Title,
-                DueDate = DueDate,
-                OwnerId = currentUserId,
-                Status = July_Team.Models.TaskStatus.Pending, 
-                Description = ""
-            };
+        // ===== التعديل الثالث هنا =====
+        task.Status = (task.Status == July_Team.Models.TaskStatus.Done)
+                    ? July_Team.Models.TaskStatus.Pending
+                    : July_Team.Models.TaskStatus.Done;
 
-            _db.Tasks.Add(newTask);
-            await _db.SaveChangesAsync();
-        }
+        _db.Tasks.Update(task);
+        await _db.SaveChangesAsync();
 
-        // في كل الحالات، نعود إلى صفحة Index
-        return RedirectToAction(nameof(Index));
+        var newStats = await GetDashboardStatsAsync();
+        return Json(new { success = true, newStats });
     }
 
-
-
-   
-    //[HttpGet]
-    //public async Task<IActionResult> Edit(int id)
-    //{
-    //    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    //    var task = await _db.Tasks.FindAsync(id);
-
-    //    // التحقق من أن المهمة موجودة وأن المستخدم الحالي هو مالكها
-    //    if (task == null || task.OwnerId != currentUserId)
-    //    {
-    //        return Forbid(); // أو NotFound()
-    //    }
-
-    //    return View(task);
-    //}
-    // 📁 Controllers/TasksController.cs
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
-        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(currentUserId))
-        {
-            currentUserId = "user-id-for-testing"; 
-        }
-        // ==================== نهاية الجزء المضاف ====================
-
+        var userId = GetCurrentUserId();
         var task = await _db.Tasks.FindAsync(id);
 
-        // الآن سيتم التحقق من الملكية بشكل صحيح
-        if (task == null || task.OwnerId != currentUserId)
+        if (task == null)
         {
-            return Forbid();
+            // إذا لم يتم العثور على المهمة أصلاً
+            return NotFound("Task not found.");
+        }
+
+        if (task.OwnerId != userId)
+        {
+            // إذا كانت المهمة موجودة ولكنها لا تخص المستخدم الحالي
+            return Forbid("You do not have permission to edit this task.");
         }
 
         return View(task);
     }
 
-    //[HttpPost]
-    //[ValidateAntiForgeryToken]
-    //public async Task<IActionResult> Edit(July_Team.Models.Task model)
-    //{
-    //    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-    //    // نتأكد أن المستخدم لا يعدل مهمة لا يملكها
-    //    if (model.OwnerId != currentUserId)
-    //    {
-    //        return Forbid();
-    //    }
-
-    //    _db.Tasks.Update(model);
-    //    await _db.SaveChangesAsync();
-    //    return RedirectToAction(nameof(Index));
-    //}
+    // POST: /Tasks/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(July_Team.Models.Task model)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,DueDate,Status,OwnerId,CreatedAt")] July_Team.Models.Task task)
     {
-        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(currentUserId))
+        if (id != task.Id)
         {
-            currentUserId = "user-id-for-testing"; // المستخدم الوهمي
+            return BadRequest("Task ID mismatch.");
         }
 
-        // نتأكد أن المستخدم لا يعدل مهمة لا يملكها
-        if (model.OwnerId != currentUserId)
+        // التحقق من الملكية مرة أخرى كإجراء أمني إضافي
+        var userId = GetCurrentUserId();
+        if (task.OwnerId != userId)
         {
-            return Forbid();
+            return Forbid("You cannot change the owner of this task.");
         }
 
-        _db.Tasks.Update(model);
-        await _db.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                // Entity Framework ذكي كفاية ليعرف أن هذا الكائن موجود ويجب تحديثه
+                _db.Update(task);
+                await _db.SaveChangesAsync();
+
+                // بعد الحفظ الناجح، أعد التوجيه إلى لوحة التحكم
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                // في حال حدوث خطأ غير متوقع أثناء الحفظ، اعرضه
+                ModelState.AddModelError("", "Unable to save changes. " + ex.Message);
+            }
+        }
+
+        // إذا وصلنا إلى هنا، فهذا يعني أن `ModelState` غير صالح
+        // أعد عرض الصفحة مع نفس البيانات التي أدخلها المستخدم لعرض رسائل الخطأ
+        return View(task);
     }
-
-
-    
-
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
     {
-        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        // 1. استخدام _db بدلاً من _context ليتوافق مع الـ Constructor الخاص بك
+        var userId = GetCurrentUserId();
+        var task = await _db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.OwnerId == userId);
 
-        
-        if (string.IsNullOrEmpty(currentUserId))
+        if (task == null)
         {
-            currentUserId = "user-id-for-testing";
+            return Json(new { success = false, message = "المهمة غير موجودة أو لا تملك صلاحية حذفها" });
         }
-       
 
-        var task = await _db.Tasks.FindAsync(id);
-
-        if (task != null && task.OwnerId == currentUserId)
+        try
         {
+            // 2. الحذف من قاعدة البيانات باستخدام _db
             _db.Tasks.Remove(task);
             await _db.SaveChangesAsync();
+
+            // 3. تحديث الإحصائيات للمستخدم الحالي فقط لضمان دقة الأرقام في الواجهة
+            var userTasks = await _db.Tasks.Where(t => t.OwnerId == userId).ToListAsync();
+
+            var totalTasks = userTasks.Count;
+            var completedTasks = userTasks.Count(t => t.Status == July_Team.Models.TaskStatus.Done);
+            var pendingTasks = totalTasks - completedTasks;
+
+            double progressPercentage = totalTasks > 0
+                ? Math.Round((double)completedTasks / totalTasks * 100)
+                : 0;
+
+            return Json(new
+            {
+                success = true,
+                newStats = new
+                {
+                    totalTasks = totalTasks,
+                    pendingTasks = pendingTasks,
+                    progressPercentage = progressPercentage
+                }
+            });
         }
-
-        return RedirectToAction(nameof(Index));
-    }
-
-    
-    [HttpPost]
-    public async Task<IActionResult> ToggleStatus(int id)
-    {
-        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(currentUserId))
+        catch (Exception ex)
         {
-            currentUserId = "user-id-for-testing";
+            return Json(new { success = false, message = "حدث خطأ أثناء الحذف: " + ex.Message });
         }
-
-        var task = await _db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.OwnerId == currentUserId);
-
-        if (task != null)
-        {
-            task.Status = (task.Status == July_Team.Models.TaskStatus.Done)
-                        ? July_Team.Models.TaskStatus.Pending
-                        : July_Team.Models.TaskStatus.Done;
-
-            _db.Tasks.Update(task);
-            await _db.SaveChangesAsync();
-
-            var userTasks = await _db.Tasks.Where(t => t.OwnerId == currentUserId).ToListAsync();
-            int totalTasks = userTasks.Count;
-            int doneTasks = userTasks.Count(t => t.Status == July_Team.Models.TaskStatus.Done);
-            int newProgress = (totalTasks > 0) ? (int)Math.Round((double)doneTasks / totalTasks * 100) : 0;
-
-            return Ok(new { progress = newProgress });
-        }
-
-        return NotFound();
     }
-
-
-
 }

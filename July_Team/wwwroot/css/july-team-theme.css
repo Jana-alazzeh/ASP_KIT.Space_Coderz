@@ -978,3 +978,261 @@ progress {
     box-sizing: content-box !important;
 }
 
+:root {
+    --primary-blue: #032ba7;
+    --primary-gradient: linear-gradient(135deg, #032ba7 0%, #1e5fd9 100%);
+    --light-bg: #f8faff;
+}
+
+body {
+    background-color: var(--light-bg);
+}
+
+/* Buttons & Elements */
+.btn-primary-gradient {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+    .btn-primary-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(3, 43, 167, 0.3);
+        color: white;
+    }
+
+/* Metric Cards */
+.metric-card {
+    transition: transform 0.3s ease;
+}
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+    }
+
+.icon-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-light-primary {
+    background: rgba(3, 43, 167, 0.1);
+}
+
+.bg-light-warning {
+    background: rgba(255, 193, 7, 0.1);
+}
+
+.bg-light-success {
+    background: rgba(40, 167, 69, 0.1);
+}
+
+
+/* =================================================================== */
+/* == July Team - Dashboard Theme (Inspired by your Website Style) == */
+/* =================================================================== */
+
+/* --- 1. Global & Layout Styles --- */
+.dashboard-wrapper {
+    background-color: #f0f4ff; /* لون أزرق فاتح جداً ومريح للعين، بديل عن #cdd5ed */
+    min-height: 100vh;
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- 2. Header & Buttons --- */
+.display-6 {
+    color: #1a202c; /* لون نص داكن وأنيق */
+}
+
+.btn-primary-gradient {
+    background: linear-gradient(135deg, #032ba7 0%, #1e5fd9 100%);
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(3, 43, 167, 0.2);
+}
+
+    .btn-primary-gradient:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(3, 43, 167, 0.3);
+    }
+
+/* --- 3. Metric Cards (الإحصائيات) --- */
+.metric-card {
+    border: 1px solid #e2e8f0;
+    border-bottom-width: 4px !important;
+    transition: all 0.3s ease;
+}
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .metric-card .small.uppercase {
+        letter-spacing: 0.5px;
+        color: #4a5568;
+    }
+
+    .metric-card h3 {
+        color: #1a202c;
+    }
+
+.icon-box {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+}
+
+/* --- 4. Progress Bar Section --- */
+.progress-section {
+    border: 1px solid #e2e8f0;
+}
+
+.progress-bar.bg-primary-gradient {
+    background: linear-gradient(135deg, #032ba7 0%, #1e5fd9 100%);
+}
+
+/* --- 5. Tabs Navigation --- */
+.nav-pills .nav-link {
+    border-radius: 50px; /* حواف دائرية مثل شريط التنقل الرئيسي */
+    padding: 8px 25px;
+    font-weight: 600;
+    color: #4a5568;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+    .nav-pills .nav-link.active,
+    .nav-pills .show > .nav-link {
+        background-color: #032ba7; /* اللون الأزرق الأساسي عند التفعيل */
+        color: white;
+        box-shadow: 0 4px 12px rgba(3, 43, 167, 0.3);
+    }
+
+/* --- 6. Task Item Card (أهم جزء) --- */
+.task-item-card {
+    background-color: #ffffff;
+    border-radius: 16px; /* حواف دائرية جميلة */
+    border: 1px solid #e2e8f0;
+    border-left-width: 5px;
+    border-left-color: #a0aec0; /* لون افتراضي رمادي-أزرق */
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+    .task-item-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+        border-left-color: #032ba7; /* لون أزرق عند المرور */
+    }
+
+    /* Style for completed tasks */
+    .task-item-card.done {
+        background-color: #f8f9fa;
+        border-left-color: #198754; /* أخضر للإنجاز */
+    }
+
+        .task-item-card.done .task-title {
+            opacity: 0.6;
+        }
+
+    /* Style for overdue tasks */
+    .task-item-card.overdue {
+        border-left-color: #dc3545; /* أحمر للمتأخر */
+        background-color: #fff5f5;
+    }
+
+        .task-item-card.overdue:hover {
+            border-left-color: #b02a37;
+        }
+
+.task-checkbox {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.form-check-input:checked {
+    background-color: #032ba7;
+    border-color: #032ba7;
+}
+
+.task-title-label {
+    cursor: pointer;
+    display: block;
+    width: 100%;
+}
+
+.task-title {
+    color: #2d3748;
+    transition: opacity 0.3s ease;
+}
+
+.task-due-date {
+    font-size: 0.85rem;
+}
+
+/* Hide actions by default, show on hover */
+.task-actions {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.task-item-card:hover .task-actions {
+    opacity: 1;
+}
+
+.btn-subtle-light {
+    background-color: #f1f5f9;
+    border: none;
+    color: #4a5568;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+    .btn-subtle-light:hover {
+        background-color: #e2e8f0;
+        color: #1a202c;
+        transform: scale(1.1);
+    }
+
+/* --- 7. Modal Styles --- */
+.modal-content {
+    border-radius: 20px !important; /* نفس الحواف الدائرية في موقعك */
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.modal-header.bg-primary-gradient {
+    border-radius: 20px 20px 0 0 !important;
+}
+

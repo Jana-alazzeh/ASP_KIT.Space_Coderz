@@ -20,22 +20,20 @@ namespace July_Team.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitJoinRequest(JoinUsViewModel model)
+        public IActionResult SubmitJoinRequest(ContactUsViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // 1. الحفظ أولاً
-                _context.JoinRequests.Add(model);
+                // الاسم الصحيح للجدول عندك في الـ AppDbContext هو ContactUs
+                _context.ContactUs.Add(model);
                 _context.SaveChanges();
 
-                // 2. إعداد رسالة النجاح
-                TempData["SuccessMessage"] = "Your application has been submitted successfully! ✅";
+                TempData["SuccessMessage"] = "Your message has been sent successfully! ✅";
 
-                // 3. إعادة التوجيه (هذا يفرغ الفورم تلقائياً)
                 return RedirectToAction("Index");
             }
 
-            // إذا فشل التحقق (مثلاً إيميل خطأ)، ارجع للفيو مع إظهار الأخطاء
+            // إذا كان هناك خطأ في البيانات، يرجع لنفس الصفحة مع الموديل الصحيح
             return View("Index", model);
         }
     }

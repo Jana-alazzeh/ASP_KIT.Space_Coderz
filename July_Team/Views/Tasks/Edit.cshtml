@@ -1,50 +1,69 @@
-﻿@* 📁 Views/Tasks/Edit.cshtml (نسخة المهام الشخصية المصححة) *@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizar
 @model July_Team.Models.Task
 
 @{
-    ViewData["Title"] = "تعديل المهمة";
+    ViewData["Title"] = Localizar["EditTask"];
 }
 
-<div class="container mt-5">
-    <div class="mx-auto" style="max-width: 700px;">
-        <div class="text-center mb-4">
-            <h2 style="color: #032ba7; font-weight: bold;">تعديل المهمة</h2>
-            <p class="text-muted">يمكنك تحديث تفاصيل المهمة هنا.</p>
-        </div>
+@* Dashboard Wrapper with Soft UI Theme *@
+<div class="dashboard-wrapper py-5 fade-in">
+    <div class="container">
+        <div class="mx-auto" style="max-width: 700px;">
 
-        <div class="card shadow-sm p-4" style="border-radius: 20px; border: none;">
-            <form asp-action="Edit">
-                <input type="hidden" asp-for="Id" />
-                @* 🛑 مهم: يجب أن نرسل OwnerId أيضاً لنحافظ على ملكية المهمة *@
-                <input type="hidden" asp-for="OwnerId" />
+            <div class="text-center mb-5">
+                <h1 class="fw-bold text-dark display-6">@Localizar["EditTask"]</h1>
+                <p class="text-muted">@Localizar["EditTaskSubtitle"]</p>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="Title" class="form-label fw-bold"></label>
-                    <input asp-for="Title" class="form-control" style="border-radius: 10px;" />
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Description" class="form-label fw-bold"></label>
-                    <textarea asp-for="Description" class="form-control" rows="4" style="border-radius: 10px;"></textarea>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label asp-for="DueDate" class="form-label fw-bold"></label>
-                        <input asp-for="DueDate" class="form-control" type="date" style="border-radius: 10px;" />
+            <div class="soft-card p-4 p-md-5 shadow-sm bg-white rounded-4 border-0">
+                <form asp-action="Edit">
+                    @* Hidden fields for logical consistency *@
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="OwnerId" />
+
+                    @* Validation Summary *@
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-4"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="Title" class="form-label fw-bold small text-uppercase text-muted">@Localizar["TaskTitle"]</label>
+                        <input asp-for="Title" class="form-control form-control-lg rounded-3 border-light bg-light" placeholder="@Localizar["EnterTaskTitle"]" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
                     </div>
-                    <div class="col-md-6">
-                        <label asp-for="Status" class="form-label fw-bold"></label>
-                        @* 🛑 الحل لخطأ التعارض: نستخدم الاسم الكامل للـ Enum *@
-                        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<July_Team.Models.TaskStatus>()" style="border-radius: 10px;"></select>
+
+                    <div class="mb-4">
+                        <label asp-for="Description" class="form-label fw-bold small text-uppercase text-muted">@Localizar["Description"]</label>
+                        <textarea asp-for="Description" class="form-control form-control-lg rounded-3 border-light bg-light" rows="4" placeholder="@Localizar["EnterDescription"]"></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
                     </div>
-                </div>
 
-                @* 🛑 تم حذف حقل "تعيين المستخدم" لأنه لم يعد ضرورياً *@
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="DueDate" class="form-label fw-bold small text-uppercase text-muted">@Localizar["DueDate"]</label>
+                            <input asp-for="DueDate" class="form-control form-control-lg rounded-3 border-light bg-light" type="date" />
+                            <span asp-validation-for="DueDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <label asp-for="Status" class="form-label fw-bold small text-uppercase text-muted">@Localizar["Status"]</label>
+                            <select asp-for="Status" class="form-select form-select-lg rounded-3 border-light bg-light" asp-items="Html.GetEnumSelectList<July_Team.Models.TaskStatus>()"></select>
+                            <span asp-validation-for="Status" class="text-danger small"></span>
+                        </div>
+                    </div>
 
-                <div class="d-grid gap-2 mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg" style="background-color: #032ba7; border-radius: 50px;">حفظ التعديلات</button>
-                    <a asp-action="Index" class="btn btn-light">العودة إلى القائمة</a>
-                </div>
-            </form>
+                    <div class="d-grid gap-2 mt-5">
+                        <button type="submit" class="btn btn-primary-gradient btn-pill py-3 fw-bold">
+                            @Localizar["SaveChanges"]
+                        </button>
+                        <a asp-action="Index" class="btn btn-light btn-pill py-2 text-muted">
+                            @Localizar["BackToList"]
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
