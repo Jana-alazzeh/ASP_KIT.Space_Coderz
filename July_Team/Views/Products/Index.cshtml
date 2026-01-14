@@ -5,39 +5,49 @@
 
 @{
     ViewData["Title"] = Localizar["KitStore"];
+
 }
-
+@section Styles {
+    <link rel="stylesheet" href="~/css/site.css" />
+}
 <div class="store-page-background">
-    <div class="container">
+    <div class="container py-5">
 
-        <div class="text-center mb-5">
-            <h1 style="color: #032ba7; font-weight: bold;">@Localizar["KitStore"]</h1>
-            <p class="lead" style="color: #032ba7;">@Localizar["StoreSubtitle"]</p>
+        <div class="text-center mb-5 fade-in-up">
+            <h1 class="display-4" style="color: #032ba7; font-weight: 800; letter-spacing: -1px;">@Localizar["KitStore"]</h1>
+            <p class="lead" style="color: #053cdb; opacity: 0.8;">@Localizar["StoreSubtitle"]</p>
         </div>
 
         <div class="row justify-content-center g-4">
             @foreach (var product in Model)
             {
-                <div class="col-lg-3 col-md-6 col-12">
+                <div class="col-lg-3 col-md-6 col-sm-10">
                     <a href="/Products/Details/@product.Id" class="text-decoration-none">
-                        <div class="product-card-hover h-100">
-                            <div class="product-images-container">
-                                <img src="@product.ImageUrl" alt="@product.Name - Front" />
-                                <img src="@(string.IsNullOrEmpty(product.ImageUrl_Back) ? product.ImageUrl : product.ImageUrl_Back)" alt="@product.Name - Back" />
+                        <div class="product-card-modern">
+                            <div class="image-wrapper">
+                                <img src="@product.ImageUrl"
+                                     alt="@product.Name - Front"
+                                     class="img-front"
+                                     loading="lazy" />
+
+                                <img src="@(string.IsNullOrEmpty(product.ImageUrl_Back) ? product.ImageUrl : product.ImageUrl_Back)"
+                                     alt="@product.Name - Back"
+                                     class="img-back"
+                                     loading="lazy" />
+
+                                <div class="view-details-overlay">
+                                    <span>@Localizar["ViewDetails"]</span>
+                                </div>
                             </div>
-                            <div class="product-card-info">
-                                <h5 class="fw-bold text-dark">@product.Name</h5>
-                                <h4 class="fw-bold" style="color: #032ba7;">@product.Price.ToString("N0") JD</h4>
+
+                            <div class="product-info-box">
+                                <h6 class="product-name">@product.Name</h6>
+                                <div class="price-tag">@product.Price.ToString("N0") <small>JD</small></div>
                             </div>
                         </div>
                     </a>
                 </div>
             }
         </div>
-
     </div>
 </div>
-
-@section Styles {
-    <link rel="stylesheet" href="~/css/site.css" />
-}

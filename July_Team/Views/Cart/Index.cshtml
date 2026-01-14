@@ -43,6 +43,109 @@
                 line-height: 1;
                 padding: 0;
             }
+
+        /* تحسين شكل أزرار الزائد والناقص */
+        .quantity-controls .btn-outline-secondary {
+            background: linear-gradient(135deg, #032ba7 0%, #1e5fd9 100%);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(3, 43, 167, 0.2);
+        }
+
+            .quantity-controls .btn-outline-secondary:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 15px rgba(3, 43, 167, 0.3);
+                background: linear-gradient(135deg, #1e5fd9 0%, #032ba7 100%);
+            }
+
+        .quantity-controls span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2d3748;
+            min-width: 30px;
+            text-align: center;
+        }
+
+    /* تحسين شكل زر "اتمام الشراء" في السلة */
+    .btn-primary.btn-lg {
+        background: linear-gradient(135deg, #032ba7 0%, #1e5fd9 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 30px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary.btn-lg:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(3, 43, 167, 0.3);
+        }
+
+
+
+
+    /* تصميم حالة السلة الفارغة */
+    .empty-cart-wrapper {
+        padding: 40px 20px;
+    }
+
+    .icon-circle {
+        width: 120px;
+        height: 120px;
+        background: rgba(3, 43, 167, 0.05);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        border: 2px dashed rgba(3, 43, 167, 0.2);
+        transition: all 0.5s ease;
+    }
+
+        .icon-circle i {
+            font-size: 4rem;
+            color: #032ba7;
+            transition: all 0.5s ease;
+        }
+
+    /* تأثير عند تمرير الماوس على الأيقونة */
+    .empty-cart-wrapper:hover .icon-circle {
+        background: rgba(3, 43, 167, 0.1);
+        transform: scale(1.05);
+        border-style: solid;
+    }
+
+    /* زر "تصفح المنتجات" ليناسب الثيم الجديد */
+    .btn-shop-now {
+        background: linear-gradient(135deg, #032ba7 0%, #1e5fd9 100%);
+        color: white;
+        border: none;
+        border-radius: 50px; /* شكل بيضاوي عصري */
+        padding: 15px 40px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        box-shadow: 0 10px 20px rgba(3, 43, 167, 0.2);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-shop-now:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(3, 43, 167, 0.3);
+            background: linear-gradient(135deg, #1e5fd9 0%, #032ba7 100%);
+        }
+
+        .btn-shop-now:active {
+            transform: translateY(0);
+        }
 </style>
 
 <div class="cart-container">
@@ -74,15 +177,17 @@
                                 <form asp-action="UpdateQuantity" method="post" class="d-inline">
                                     <input type="hidden" name="productId" value="@item.ProductId" />
                                     <input type="hidden" name="size" value="@item.Size" />
-                                    <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
-                                    <button type="submit" class="btn btn-outline-secondary">+</button>
+                                    <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
+                                    <button type="submit" class="btn btn-outline-secondary" @(item.Quantity <= 1 ? "disabled" : "")>-</button>
                                 </form>
+
                                 <span>@item.Quantity</span>
+
                                 <form asp-action="UpdateQuantity" method="post" class="d-inline">
                                     <input type="hidden" name="productId" value="@item.ProductId" />
                                     <input type="hidden" name="size" value="@item.Size" />
-                                    <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
-                                    <button type="submit" class="btn btn-outline-secondary">-</button>
+                                    <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
+                                    <button type="submit" class="btn btn-outline-secondary">+</button>
                                 </form>
                             </div>
                         </div>
@@ -102,18 +207,24 @@
                     </a>
                 </div>
             }
+
             else
             {
-                <div class="text-center py-5">
-                    <i class="bi bi-cart-x" style="font-size: 5rem; color: #ccc;"></i>
-                    <h4 class="mt-3">@Localizar["CartIsEmpty"]</h4>
-                    <p class="text-muted">@Localizar["CartEmptyDescription"]</p>
-                    <a asp-controller="Products" asp-action="Index" class="btn btn-primary mt-3">@Localizar["BrowseProducts"]</a>
+            <div class="empty-cart-wrapper text-center py-5">
+                <div class="icon-circle mb-4">
+                    <i class="bi bi-cart-x"></i>
                 </div>
+                <h2 class="fw-bold mb-3" style="color: #032ba7;">@Localizar["CartIsEmpty"]</h2>
+                <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">
+                    @Localizar["CartEmptyDescription"]
+                </p>
+                <a asp-controller="Products" asp-action="Index" class="btn btn-shop-now">
+                    <i class="bi bi-bag-plus me-2"></i> @Localizar["BrowseProducts"]
+                </a>
+            </div>
             }
 
         </div>
     </div>
 </div>
-
 

@@ -1,168 +1,127 @@
 ﻿@using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> Localizar
-
-@model IEnumerable<July_Team.Models.Task>
+@model July_Team.ViewModels.TaskDashboardViewModel
 
 @{
     ViewData["Title"] = Localizar["MyTasksDashboard"];
-    int progress = ViewBag.ProgressPercentage ?? 0;
     var today = DateTime.Today;
-    var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
-    var endOfWeek = startOfWeek.AddDays(6);
 }
 
-<div class="container mt-5">
-    <div class="text-center mb-4">
-        <h2 class="font-bold">@Localizar["TaskDashboard"]</h2>
-        <p class="text-gray">@Localizar["TaskDashboardSubtitle"]</p>
-    </div>
+<div class="dashboard-wrapper py-5 fade-in">
+    <div class="container">
 
- 
-    <div class="card card-small mb-4 shadow-sm">
-        <h5 class="font-semibold mb-2 text-primary">@Localizar["OverallTaskProgress"]:</h5>
-        <div class="progress" role="progressbar" style="height: 25px; border-radius: var(--border-radius-small);">
-            <div class="progress-bar" style="width: @progress%; background: var(--gradient-primary); border-radius: var(--border-radius-small);"
-                 aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="100">
-                <span class="font-semibold">@progress% @Localizar["Completed"]</span>
+<div class="dashboard-root">
+    <div class="container py-5">
+
+        <div class="glass-header mb-4 fade-in">
+            <div class="row align-items-center">
+                <div class="col-md-8 text-center text-md-start">
+                    <h1 class="display-5 fw-bold text-primary-dark mb-1">@Localizar["TaskDashboard"]</h1>
+                    <p class="text-muted-custom mb-0">@Localizar["WelcomeMessage"], <span class="fw-bold">@User.Identity.Name</span></p>
+                </div>
+                <div class="col-md-4 text-md-end mt-4 mt-md-0">
+                    <button class="btn btn-main-gradient px-4 py-3 shadow-lg" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+                        <i class="bi bi-plus-circle-fill me-2"></i> @Localizar["AddNewTask"]
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <button class="btn btn-primary btn-small float-end mb-3 shadow-button" data-bs-toggle="modal" data-bs-target="#addTaskModal">
-        <i class="bi bi-plus-circle-fill me-2"></i> @Localizar["AddNewTask"]
-    </button>
-
-    <div class="clearfix"></div>
-
-    
-    <ul class="nav nav-tabs" id="taskPlannerTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="daily-tab" data-bs-toggle="tab" data-bs-target="#daily-tasks" type="button" role="tab">@Localizar["TodaysTasks"]</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="weekly-tab" data-bs-toggle="tab" data-bs-target="#weekly-tasks" type="button" role="tab">@Localizar["WeeksTasks"]</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="monthly-tab" data-bs-toggle="tab" data-bs-target="#monthly-tasks" type="button" role="tab">@Localizar["MonthsTasks"]</button>
-        </li>
-    </ul>
-
-   
-    <div class="tab-content bg-white p-3 shadow-sm" id="taskPlannerTabsContent" style="border: 1px solid #dee2e6; border-top: none; border-radius: 0 0 var(--border-radius) var(--border-radius);">
-
-        
-        <div class="tab-pane fade show active" id="daily-tasks" role="tabpanel">
-            @if (Model.Any(t => t.DueDate.Date == today))
-            {
-                <ul class="list-group list-group-flush">
-                    @foreach (var item in Model.Where(t => t.DueDate.Date == today).OrderBy(t => t.DueDate))
-                    {
-                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                            <div class="d-flex align-items-center">
-                                <input class="form-check-input task-checkbox me-3" type="checkbox" value="@item.Id" id="task-@item.Id" @(item.Status == July_Team.Models.TaskStatus.Done ? "checked" : "")>
-                                <label class="form-check-label @(item.Status == July_Team.Models.TaskStatus.Done ? "text-decoration-line-through text-muted" : "")" for="task-@item.Id">@item.Title</label>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span class="badge rounded-pill @(item.Status == July_Team.Models.TaskStatus.Done ? "bg-success" : "bg-warning text-dark") me-3">@Localizar[item.Status.ToString()]</span>
-                                <a href="/Tasks/Edit/@item.Id" class="btn btn-sm btn-outline-primary me-2">@Localizar["Edit"]</a>
-                                <form method="post" action="/Tasks/Delete/@item.Id" style="display: inline;">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('@Localizar["DeleteConfirmation"]')">@Localizar["Delete"]</button>
-                                </form>
-                            </div>
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p class="text-center text-muted p-4">@Localizar["NoTasksForToday"]</p>
-            }
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="metric-glass-card border-primary-glow">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="stat-label">@Localizar["TotalTasks"]</span>
+                            <h2 class="stat-value" id="total-tasks-count">@Model.TotalTasks</h2>
+                        </div>
+                        <div class="stat-icon bg-primary-soft text-primary"><i class="bi bi-stack"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="metric-glass-card border-warning-glow">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="stat-label">@Localizar["Pending"]</span>
+                            <h2 class="stat-value" id="pending-tasks-count">@Model.PendingTasks</h2>
+                        </div>
+                        <div class="stat-icon bg-warning-soft text-warning"><i class="bi bi-clock-history"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="metric-glass-card border-success-glow">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="stat-label">@Localizar["ProgressPercentage"]</span>
+                            <h2 class="stat-value" id="global-progress-text">@Model.ProgressPercentage%</h2>
+                        </div>
+                        <div class="stat-icon bg-success-soft text-success"><i class="bi bi-check-all"></i></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="tab-pane fade" id="weekly-tasks" role="tabpanel">
-            @if (Model.Any(t => t.DueDate.Date >= startOfWeek && t.DueDate.Date <= endOfWeek))
-            {
-                <ul class="list-group list-group-flush">
-                    @foreach (var item in Model.Where(t => t.DueDate.Date >= startOfWeek && t.DueDate.Date <= endOfWeek).OrderBy(t => t.DueDate))
-                    {
-                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                            <div class="d-flex align-items-center">
-                                <input class="form-check-input task-checkbox me-3" type="checkbox" value="@item.Id" id="task-@item.Id" @(item.Status == July_Team.Models.TaskStatus.Done ? "checked" : "")>
-                                <label class="form-check-label @(item.Status == July_Team.Models.TaskStatus.Done ? "text-decoration-line-through text-muted" : "")" for="task-@item.Id">@item.Title</label>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span class="badge rounded-pill @(item.Status == July_Team.Models.TaskStatus.Done ? "bg-success" : "bg-warning text-dark") me-3">@Localizar[item.Status.ToString()]</span>
-                                <a href="/Tasks/Edit/@item.Id" class="btn btn-sm btn-outline-primary me-2">@Localizar["Edit"]</a>
-                                <form method="post" action="/Tasks/Delete/@item.Id" style="display: inline;">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('@Localizar["DeleteConfirmation"]')">@Localizar["Delete"]</button>
-                                </form>
-                            </div>
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p class="text-center text-muted p-4">@Localizar["NoTasksForWeek"]</p>
-            }
+        <div class="glass-card mb-5 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-primary-dark mb-0"><i class="bi bi-lightning-charge-fill me-2"></i>@Localizar["WeeklyProductivity"]</h5>
+                <span class="badge bg-main-gradient rounded-pill px-3 py-2" id="progress-bar-label">@Model.ProgressPercentage%</span>
+            </div>
+            <div class="progress progress-custom" style="height: 14px;">
+                <div id="main-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-main-gradient" 
+                     role="progressbar" style="width: @Model.ProgressPercentage%"></div>
+            </div>
         </div>
 
-     
-        <div class="tab-pane fade" id="monthly-tasks" role="tabpanel">
-            @if (Model.Any(t => t.DueDate.Year == today.Year && t.DueDate.Month == today.Month))
-            {
-                <ul class="list-group list-group-flush">
-                    @foreach (var item in Model.Where(t => t.DueDate.Year == today.Year && t.DueDate.Month == today.Month).OrderBy(t => t.DueDate))
-                    {
-                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                            <div class="d-flex align-items-center">
-                                <input class="form-check-input task-checkbox me-3" type="checkbox" value="@item.Id" id="task-@item.Id" @(item.Status == July_Team.Models.TaskStatus.Done ? "checked" : "")>
-                                <label class="form-check-label @(item.Status == July_Team.Models.TaskStatus.Done ? "text-decoration-line-through text-muted" : "")" for="task-@item.Id">@item.Title</label>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span class="badge rounded-pill @(item.Status == July_Team.Models.TaskStatus.Done ? "bg-success" : "bg-warning text-dark") me-3">@Localizar[item.Status.ToString()]</span>
-                                <a href="/Tasks/Edit/@item.Id" class="btn btn-sm btn-outline-primary me-2">@Localizar["Edit"]</a>
-                                <form method="post" action="/Tasks/Delete/@item.Id" style="display: inline;">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('@Localizar["DeleteConfirmation"]')">@Localizar["Delete"]</button>
-                                </form>
-                            </div>
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p class="text-center text-muted p-4">@Localizar["NoTasksForMonth"]</p>
-            }
+        <div class="glass-card p-4">
+            <ul class="nav nav-custom-pills mb-4" id="taskTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="daily-tab" data-bs-toggle="tab" data-bs-target="#tasks-panel" type="button" role="tab" data-filter="daily">@Localizar["Today"]</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="weekly-tab" data-bs-toggle="tab" data-bs-target="#tasks-panel" type="button" role="tab" data-filter="weekly">@Localizar["ThisWeek"]</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="all-tab" data-bs-toggle="tab" data-bs-target="#tasks-panel" type="button" role="tab" data-filter="all">@Localizar["AllTasks"]</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="tasks-tab-content">
+                <div class="tab-pane fade show active" id="tasks-panel" role="tabpanel">
+                    <div id="task-list-container" class="row g-3">
+                        <div class="text-center p-5">
+                            <div class="spinner-grow text-primary" role="status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-
 <div class="modal fade" id="addTaskModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content rounded-lg">
-            <form asp-action="QuickCreate" method="post">
-                <div class="modal-header" style="background: var(--gradient-primary); color: white;">
-                    <h5 class="modal-title font-semibold">@Localizar["AddNewTask"]</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-custom">
+            <form id="quickCreateTaskForm" asp-action="QuickCreate" method="post">
+                <div class="modal-header-custom">
+                    <h3 class="fw-bold mb-0">@Localizar["CreateNewTask"]</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="Title" class="form-label">@Localizar["TaskTitle"]</label>
-                        <input name="Title" type="text" class="form-control" required placeholder="@Localizar["TaskTitlePlaceholder"]">
+                <div class="modal-body p-4">
+                    <div id="modal-error-alert" class="alert alert-danger d-none" role="alert"></div>
+                    <div class="form-group-custom mb-4">
+                        <label>@Localizar["TaskTitle"]</label>
+                        <input name="Title" type="text" class="input-custom" required placeholder="@Localizar["TaskPlaceholder"]">
                     </div>
-                    <div class="form-group">
-                        <label for="DueDate" class="form-label">@Localizar["DueDate"]</label>
-                        <input name="DueDate" type="date" class="form-control" value="@today.ToString("yyyy-MM-dd")">
+                    <div class="form-group-custom mb-2">
+                        <label>@Localizar["DueDate"]</label>
+                        <input name="DueDate" type="date" class="input-custom" value="@today.ToString("yyyy-MM-dd")">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizar["Cancel"]</button>
-                    <button type="submit" class="btn btn-primary">@Localizar["SaveTask"]</button>
+                <div class="modal-footer-custom">
+                    <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">@Localizar["Cancel"]</button>
+                    <button type="submit" class="btn btn-main-gradient px-4">@Localizar["SaveTask"]</button>
                 </div>
             </form>
         </div>
@@ -170,73 +129,356 @@
 </div>
 
 @section Scripts {
- 
-    <link rel="stylesheet" href="~/css/july-team-theme.css" />
+    <style>
 
-    <script>
+<style>
+import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
 
-        document.addEventListener('DOMContentLoaded', function () {
+/* الأساسيات */
+.dashboard-root {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #032ba7 0%, #0a4cc7 50%, #1e5fd9 100%);
+    min-height: 100vh;
+    color: #2d3748;
+}
 
-            const checkboxes = document.querySelectorAll('.task-checkbox');
+/* Glassmorphism Cards */
+.glass-header, .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
 
-            
-            checkboxes.forEach(function (checkbox) {
-                checkbox.addEventListener('change', function () {
+.metric-glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 25px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    height: 100%;
+}
 
-                    const taskId = this.value;
-                    const isChecked = this.checked;
+.metric-glass-card:hover {
+    transform: translateY(-5px);
+    background: #fff;
+}
 
-                   
-                    fetch(`/Tasks/ToggleStatus/${taskId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json'
+/* Borders with Glowing effect */
+.border-primary-glow { border-bottom: 4px solid #032ba7; }
+.border-warning-glow { border-bottom: 4px solid #ed8936; }
+.border-success-glow { border-bottom: 4px solid #48bb78; }
+
+/* Typography */
+.text-primary-dark { color: #032ba7; }
+.text-muted-custom { color: #718096; }
+.stat-label { font-size: 0.9rem; font-weight: 600; color: #718096; text-uppercase: uppercase; }
+.stat-value { font-size: 2rem; font-weight: 700; color: #1a202c; margin: 0; }
+
+/* Icons */
+.stat-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+.bg-primary-soft { background: rgba(3, 43, 167, 0.1); }
+.bg-warning-soft { background: rgba(237, 137, 54, 0.1); }
+.bg-success-soft { background: rgba(72, 187, 120, 0.1); }
+
+/* Buttons & Progress */
+.btn-main-gradient {
+    background: linear-gradient(135deg, #032ba7 0%, #1e5fd9 100%);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.btn-main-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(3, 43, 167, 0.4);
+    color: white;
+}
+
+.bg-main-gradient { background: linear-gradient(90deg, #032ba7, #1e5fd9); }
+.progress-custom { background: #edf2f7; border-radius: 10px; overflow: hidden; }
+
+/* Custom Tabs */
+.nav-custom-pills .nav-link {
+    border-radius: 12px;
+    padding: 10px 25px;
+    color: #718096;
+    font-weight: 600;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+.nav-custom-pills .nav-link.active {
+    background: #032ba7;
+    color: white;
+    box-shadow: 0 4px 12px rgba(3, 43, 167, 0.3);
+}
+
+/* Modal - New Style */
+.modal-custom {
+    border-radius: 25px;
+    border: none;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+}
+.modal-header-custom {
+    padding: 30px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: center;
+    position: relative;
+}
+.modal-header-custom h3 { color: #032ba7; }
+.modal-footer-custom {
+    padding: 20px 30px 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+/* Form Styling */
+.form-group-custom label {
+    display: block;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 8px;
+}
+.input-custom {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+.input-custom:focus {
+    outline: none;
+    border-color: #032ba7;
+    box-shadow: 0 0 0 4px rgba(3, 43, 167, 0.1);
+}
+
+.btn-secondary-custom {
+    background: #e2e8f0;
+    color: #4a5568;
+    border-radius: 15px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+
+/* Animations */
+.fade-in { animation: fadeIn 0.6s ease-out; }
+keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+                /* تنسيق بطاقة المهمة الفردية داخل التصميم الجديد */
+                .task-item-card {
+                    background: rgba(255, 255, 255, 0.7);
+                    border-radius: 18px;
+                    border: 1px solid rgba(3, 43, 167, 0.05);
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                    .task-item-card:hover {
+                        background: #ffffff;
+                        transform: translateX(5px); /* حركة بسيطة لليمين عند التحويم */
+                        border-color: #032ba7;
+                        box-shadow: 0 5px 15px rgba(3, 43, 167, 0.1);
+                    }
+
+                /* زر الحذف والتعديل */
+                .btn-action {
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: none;
+                    transition: all 0.2s ease;
+                    background: transparent;
+                }
+
+                .btn-edit {
+                    color: #4a5568;
+                }
+
+                    .btn-edit:hover {
+                        background: #e2e8f0;
+                        color: #032ba7;
+                    }
+
+                .btn-delete {
+                    color: #cbd5e0;
+                }
+                    /* رمادي باهت في البداية */
+                    .btn-delete:hover {
+                        background: #fff5f5;
+                        color: #e53e3e;
+                    }
+
+                .task-item-card.done {
+                    background: #f8fafc;
+                    opacity: 0.8;
+                }
+
+                .bg-danger-soft {
+                    background: rgba(229, 62, 62, 0.1);
+                }
+</style>
+
+    </style>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // 1. تعريف العناصر الأساسية
+                    const taskListContainer = document.getElementById('task-list-container');
+                    const taskTabs = document.querySelectorAll('#taskTabs .nav-link');
+                    const addTaskModalElement = document.getElementById('addTaskModal');
+                    const addTaskModal = new bootstrap.Modal(addTaskModalElement);
+                    const addTaskForm = document.getElementById('quickCreateTaskForm');
+                    let currentFilter = 'daily';
+
+                    // 2. دالة تحديث الإحصائيات (العدادات العلوية)
+                    function updateDashboardStats(stats) {
+                        if (!stats) return;
+                        document.getElementById('total-tasks-count').textContent = stats.totalTasks;
+                        document.getElementById('pending-tasks-count').textContent = stats.pendingTasks;
+                        document.getElementById('global-progress-text').textContent = stats.progressPercentage + '%';
+                        document.getElementById('progress-bar-label').textContent = stats.progressPercentage + '%';
+
+                        const progressBar = document.getElementById('main-progress-bar');
+                        progressBar.style.width = stats.progressPercentage + '%';
+                        progressBar.setAttribute('aria-valuenow', stats.progressPercentage);
+                    }
+
+                    // 3. دالة جلب المهام (AJAX)
+                    async function fetchAndRenderTasks(filter) {
+                        currentFilter = filter;
+                        taskListContainer.innerHTML = `<div class="text-center p-5"><div class="spinner-grow text-primary" role="status"></div></div>`;
+
+                        try {
+                            const response = await fetch(`/Tasks/GetTasksPartial?filter=${filter}`);
+                            if (!response.ok) throw new Error('Network error');
+                            const html = await response.text();
+                            taskListContainer.innerHTML = html;
+                        } catch (error) {
+                            console.error('Fetch error:', error);
+                            taskListContainer.innerHTML = `<div class="col-12 text-center text-danger p-5"><h5>@Localizar["ErrorLoadingTasks"]</h5></div>`;
                         }
-                    })
-                        .then(response => {
-                          
-                            if (!response.ok) {
-                                throw new Error('Server returned an error!');
-                            }
-                           
-                            return response.json();
-                        })
-                        .then(data => {
-                     
-                            const progressBar = document.querySelector('.progress-bar');
-                            const progressText = progressBar.querySelector('span');
+                    }
 
-                            
-                            progressBar.style.width = data.progress + '%';
-                            progressBar.setAttribute('aria-valuenow', data.progress);
-                            progressText.textContent = `${data.progress}% ${'@Localizar["Completed"]'}`;
-
-                      
-                            const listItem = this.closest('li');
-                            const label = listItem.querySelector('label');
-                            const badge = listItem.querySelector('.badge');
-
-                            if (isChecked) {
-                                label.classList.add('text-decoration-line-through', 'text-muted');
-                                badge.classList.replace('bg-warning', 'bg-success');
-                                badge.classList.remove('text-dark');
-                                badge.textContent = 'Done';
-                            } else {
-                                label.classList.remove('text-decoration-line-through', 'text-muted');
-                                badge.classList.replace('bg-success', 'bg-warning');
-                                badge.classList.add('text-dark');
-                                badge.textContent = 'Pending';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error updating task:', error);
-                            alert('@Localizar["TaskUpdateError"]');
-                            this.checked = !isChecked;
+                    // 4. مراقب أحداث التبويبات (Tabs)
+                    taskTabs.forEach(tab => {
+                        tab.addEventListener('click', function () {
+                            fetchAndRenderTasks(this.getAttribute('data-filter'));
                         });
+                    });
+
+                    // 5. مراقب أحداث القائمة (الحذف وتغيير الحالة) - Event Delegation
+                    taskListContainer.addEventListener('click', async function (e) {
+
+                        // --- أولاً: منطق الحذف ---
+                        const deleteBtn = e.target.closest('.delete-task-btn');
+                        if (deleteBtn) {
+                            e.preventDefault();
+                            const taskId = deleteBtn.getAttribute('data-task-id');
+
+                            if (confirm('@Localizar["AreYouSureDelete"]')) {
+                                try {
+                                    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                                    const response = await fetch(`/Tasks/Delete/${taskId}`, {
+                                        method: 'POST',
+                                        headers: { 'RequestVerificationToken': token }
+                                    });
+
+                                    const result = await response.json();
+                                    if (result.success) {
+                                        const card = deleteBtn.closest('.task-item-col');
+                                        card.style.transition = 'all 0.3s ease';
+                                        card.style.opacity = '0';
+                                        card.style.transform = 'scale(0.9)';
+
+                                        setTimeout(() => {
+                                            card.remove();
+                                            updateDashboardStats(result.newStats);
+                                            if (taskListContainer.querySelectorAll('.task-item-card').length === 0) {
+                                                fetchAndRenderTasks(currentFilter);
+                                            }
+                                        }, 300);
+                                    } else {
+                                        alert(result.message);
+                                    }
+                                } catch (error) {
+                                    alert('Error connecting to server');
+                                }
+                            }
+                            return; // إنهاء الدالة هنا إذا كان الضغط على حذف
+                        }
+
+                        // --- ثانياً: منطق تغيير الحالة (التشيك بوكس) ---
+                        if (e.target.classList.contains('task-checkbox')) {
+                            const checkbox = e.target;
+                            const taskId = checkbox.value;
+                            const card = checkbox.closest('.task-item-card');
+                            const title = card.querySelector('.task-title');
+
+                            try {
+                                const response = await fetch(`/Tasks/ToggleStatus/${taskId}`, { method: 'POST' });
+                                const data = await response.json();
+
+                                if (data.success) {
+                                    card.classList.toggle('done', checkbox.checked);
+                                    title.classList.toggle('text-decoration-line-through', checkbox.checked);
+                                    title.classList.toggle('text-muted', checkbox.checked);
+                                    updateDashboardStats(data.newStats);
+                                }
+                            } catch (error) {
+                                checkbox.checked = !checkbox.checked;
+                                alert('Update failed');
+                            }
+                        }
+                    });
+
+                    // 6. إضافة مهمة جديدة
+                    addTaskForm.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+                        const formData = new FormData(this);
+                        const errorAlert = document.getElementById('modal-error-alert');
+
+                        try {
+                            const response = await fetch(this.action, {
+                                method: 'POST',
+                                body: new URLSearchParams(formData)
+                            });
+                            const result = await response.json();
+
+                            if (result.success) {
+                                addTaskModal.hide();
+                                this.reset();
+                                updateDashboardStats(result.newStats);
+                                fetchAndRenderTasks(currentFilter);
+                            } else {
+                                errorAlert.textContent = result.message;
+                                errorAlert.classList.remove('d-none');
+                            }
+                        } catch (error) {
+                            errorAlert.textContent = 'Connection error';
+                            errorAlert.classList.remove('d-none');
+                        }
+                    });
+
+                    // تشغيل أولي
+                    fetchAndRenderTasks(currentFilter);
                 });
-            });
-        });
-    </script>
-
-
+            </script>
 }

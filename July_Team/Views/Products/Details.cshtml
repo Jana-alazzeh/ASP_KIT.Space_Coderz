@@ -1,94 +1,104 @@
 ﻿@using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> Localizar
-
 @model July_Team.Models.ProductDetailViewModel
 
 @{
-    ViewData["Title"] = Model.Name; 
+    ViewData["Title"] = Model.Name;
 }
 
-<
-<style>
-    
-    .product-images-scroll {
-        display: flex;
-        overflow-x: scroll;
-        gap: 15px;
-        padding-bottom: 15px;
-        border-radius: 15px;
-    }
+<div class="container py-5 fade-in">
+    <div class="product-wrapper shadow-lg">
+        <div class="row g-0">
+            <div class="col-lg-6 bg-light-blue d-flex flex-column align-items-center justify-content-center p-4">
+                <div class="main-image-wrapper">
+                    <img src="@Model.ImageUrl" id="mainImage" class="img-fluid main-product-img" alt="@Model.Name">
+                </div>
 
-        .product-images-scroll img {
-            flex-shrink: 0;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            height: auto;
-        }
-
-    .size-option input[type="radio"] {
-        display: none;
-    }
-
-    .size-option label {
-        display: inline-block;
-        padding: 10px 15px;
-        border: 2px solid #032ba7;
-        color: #032ba7;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: background-color 0.2s, color 0.2s;
-    }
-
-    .size-option input[type="radio"]:checked + label {
-        background-color: #032ba7;
-        color: white;
-    }
-</style>
-
-<div class="container py-5">
-    <div class="row g-5">
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-        }
-
-        <div class="col-lg-7">
-            <h2 class="mb-3">@Localizar["ProductImages"]</h2>
-            <div class="product-images-scroll">
-                <img src="@Model.ImageUrl" alt="@Model.Name - Front View">
-                <img src="@(string.IsNullOrEmpty(Model.ImageUrl_Back) ? Model.ImageUrl : Model.ImageUrl_Back)" alt="@Model.Name - Back View">
+                <div class="thumbnail-row d-flex justify-content-center gap-3 mt-4">
+                    <img src="@Model.ImageUrl" class="thumb active" onclick="changeImage(this.src, this)" alt="Front">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl_Back))
+                    {
+                        <img src="@Model.ImageUrl_Back" class="thumb" onclick="changeImage(this.src, this)" alt="Back">
+                    }
+                </div>
             </div>
-        </div>
 
-        <div class="col-lg-5">
-            <h1 class="display-5 fw-bold mb-3">@Model.Name</h1>
-            <h3 class="fw-bolder mb-4" style="color: #032ba7;">@Model.Price.ToString("N0") JD</h3>
-            <p class="lead text-muted">@Model.Description</p>
+            <div class="col-lg-5 p-4 p-md-5 bg-white">
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">@Localizar["Store"]</a></li>
+                        <li class="breadcrumb-item active">@Model.Name</li>
+                    </ol>
+                </nav>
 
-            <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                <input type="hidden" asp-for="ProductId" />
+                <h1 class="product-title">@Model.Name</h1>
+                <div class="price-badge mb-4">@Model.Price.ToString("N0") <span>JD</span></div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-bold d-block">@Localizar["SelectSize"]:</label>
-                    <div class="size-option d-flex gap-3">
-                        <input type="radio" id="size-s" asp-for="SelectedSize" value="S" required><label for="size-s">S</label>
-                        <input type="radio" id="size-m" asp-for="SelectedSize" value="M"><label for="size-m">M</label>
-                        <input type="radio" id="size-l" asp-for="SelectedSize" value="L"><label for="size-l">L</label>
-                        <input type="radio" id="size-xl" asp-for="SelectedSize" value="XL"><label for="size-xl">XL</label>
+                <p class="product-desc text-muted mb-4">@Model.Description</p>
+
+                <hr class="my-4 opacity-25">
+
+                <form asp-controller="Cart" asp-action="AddToCart" method="post" id="addToCartForm">
+                    <input type="hidden" asp-for="ProductId" />
+
+                    @* لا تظهر المقاسات إلا إذا كان هناك "AvailableStock" أو منطق للمقاسات *@
+                    @if (Model.AvailableStock > 0) @* هنا يمكنك إضافة شرط (&& Model.HasSizes) إذا كان متاحاً في الـ Model *@
+                    {
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark">@Localizar["SelectSize"]</label>
+                            <div class="size-selector d-flex flex-wrap gap-2">
+                                @foreach (var size in new[] { "S", "M", "L", "XL", "XXL" })
+                                {
+                                    <input type="radio" class="btn-check" name="SelectedSize" id="size-@size" value="@size" required>
+                                    <label class="btn btn-outline-primary size-btn" for="size-@size">@size</label>
+                                }
+                            </div>
+                            @* رسالة تنبيه مخصصة *@
+                            <div class="invalid-feedback" id="sizeError">@Localizar["PleaseSelectSize"]</div>
+                        </div>
+                    }
+
+                    <div class="row g-3 align-items-end mb-5">
+                        <div class="col-4">
+                            <label class="form-label fw-bold">@Localizar["Quantity"]</label>
+                            <div class="quantity-input-group">
+                                <button type="button" onclick="this.parentNode.querySelector('input').stepDown()" class="qty-btn">-</button>
+                                <input type="number" asp-for="SelectedQuantity" class="form-control text-center" min="1" max="@Model.AvailableStock" value="1">
+                                <button type="button" onclick="this.parentNode.querySelector('input').stepUp()" class="qty-btn">+</button>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <button type="submit" class="btn btn-add-to-cart w-100">
+                                <span class="btn-text">@Localizar["AddToCart"]</span>
+                                <i class="bi bi-bag-plus-fill ms-2"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-
-                <div class="mb-5">
-                    <label asp-for="SelectedQuantity" class="form-label fw-bold">@Localizar["Quantity"]:</label>
-                    <input type="number" asp-for="SelectedQuantity" class="form-control" min="1" max="@Model.AvailableStock" required style="max-width: 100px;">
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">
-                    <i class="bi bi-cart-plus me-2"></i> @Localizar["AddToCart"]
-                </button>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // تبديل الصور بسلاسة
+        function changeImage(src, element) {
+            document.getElementById('mainImage').src = src;
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // تنبيه المستخدم إذا نسي المقاس
+        document.getElementById('addToCartForm').onsubmit = function(e) {
+            const sizeSelected = document.querySelector('input[name="SelectedSize"]:checked');
+            const errorDiv = document.getElementById('sizeError');
+
+            if (!sizeSelected) {
+                e.preventDefault();
+                errorDiv.style.display = 'block';
+                document.querySelector('.size-selector').style.borderColor = '#e3342f';
+            }
+        };
+    </script>
+}

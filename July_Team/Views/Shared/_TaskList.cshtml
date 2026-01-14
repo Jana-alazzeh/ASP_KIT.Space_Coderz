@@ -1,0 +1,63 @@
+﻿@model IEnumerable<July_Team.Models.Task>
+
+@if (!Model.Any())
+{
+    <div class="col-12 text-center text-muted p-5 fade-in">
+        <i class="bi bi-check2-circle display-1 text-primary-soft"></i>
+        <h5 class="mt-3 fw-bold text-primary-dark">لا توجد مهام هنا</h5>
+        <p class="text-muted-custom">استمتع بوقتك، لقد أنجزت كل شيء!</p>
+    </div>
+}
+else
+{
+    foreach (var task in Model)
+    {
+        var isDone = task.Status == July_Team.Models.TaskStatus.Done;
+        var cardClasses = isDone ? "done" : (task.IsOverdue ? "overdue shadow-sm border-danger-soft" : "");
+        var titleClasses = isDone ? "text-decoration-line-through text-muted opacity-50" : "";
+        var checkboxId = $"task-check-{task.Id}";
+
+        <div class="col-12 task-item-col fade-in">
+            <div class="task-item-card @cardClasses p-3 mb-2">
+                <div class="d-flex align-items-center">
+
+                    <div class="flex-shrink-0 me-3">
+                        <input class="form-check-input task-checkbox custom-check" type="checkbox"
+                               value="@task.Id" id="@checkboxId" @(isDone ? "checked" : "")>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <label for="@checkboxId" class="task-title-label m-0">
+                            <h6 class="task-title mb-1 fw-bold @titleClasses text-primary-dark">@task.Title</h6>
+                        </label>
+                        <div class="task-meta small">
+                            @if (task.IsOverdue && !isDone)
+                            {
+                                <span class="text-danger fw-bold bg-danger-soft px-2 py-1 rounded-pill">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> متأخرة
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted-custom">
+                                    <i class="bi bi-calendar-event me-1"></i> @task.TimeLeft
+                                </span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="flex-shrink-0 ms-2 task-actions d-flex gap-2">
+                        <a href="/Tasks/Edit/@task.Id" class="btn btn-action btn-edit" title="تعديل">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+
+                        <button type="button" class="btn btn-action btn-delete delete-task-btn"
+                                data-task-id="@task.Id" title="حذف">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

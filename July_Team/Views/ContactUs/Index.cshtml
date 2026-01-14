@@ -27,7 +27,7 @@
                     <h3 class="form-section-title">@Localizar["SendUsAMessage"]</h3>
                     <p class="form-section-subtitle">@Localizar["WillReplyASAP"]</p>
 
-                    <form asp-controller="ContactUs" asp-action="Index" method="post">
+                    <form asp-controller="ContactUs" asp-action="SubmitJoinRequest" method="post">
 
                         @if (TempData["SuccessMessage"] != null)
                         {
