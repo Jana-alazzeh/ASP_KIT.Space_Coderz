@@ -139,6 +139,8 @@
 
 
 using July_Team.Models;
+using July_Team.Services;
+using July_Team.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -245,7 +247,17 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "July Team API", Version = "v1" });
 });
 
+#region Services Registration
+// Register generic repository for dependency injection
+// This allows services to request IRepository<T> and receive Repository<T>
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+// Register application services
+// Scoped lifetime means one instance per HTTP request
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+#endregion
 
 var app = builder.Build();
 
