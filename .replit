@@ -1,0 +1,39 @@
+modules = ["web", "dotnet-7.0", "nodejs-20", "dotnet-8.0"]
+[agent]
+expertMode = true
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd July_Team && dotnet run --urls \"http://0.0.0.0:5000\""
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["dotnet", "publish/July_Team.dll", "--urls", "http://0.0.0.0:5000"]
+build = ["dotnet", "publish", "-c", "Release", "-o", "publish", "July_Team/July_Team.csproj"]

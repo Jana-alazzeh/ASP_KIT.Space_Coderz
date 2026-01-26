@@ -139,6 +139,8 @@
 
 
 using July_Team.Models;
+using July_Team.Services;
+using July_Team.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -154,11 +156,42 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 #region connectDB
-// 🛑 تم تعديل GetConnectionString لتتوافق مع الاسم الذي استخدمتهِ في كودكِ
-builder.Services.AddDbContext<AppDbContext>(option =>
-option.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
-#endregion
+// 1. محاولة جلب رابط قاعدة البيانات من Replit (PostgreSQL)
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+string connectionString;
 
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    // إذا وجد الرابط، نستخدم PostgreSQL
+    if (databaseUrl.StartsWith("postgresql://"))
+    {
+        var uri = new Uri(databaseUrl);
+        var userInfo = uri.UserInfo.Split(':');
+        var host = uri.Host;
+        var database = uri.AbsolutePath.TrimStart('/');
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var sslMode = query["sslmode"] ?? "disable";
+        var npgsqlSslMode = sslMode == "disable" ? "Disable" : "Require";
+        connectionString = $"Host={host};Database={database};Username={userInfo[0]};Password={userInfo[1]};SSL Mode={npgsqlSslMode}";
+    }
+    else
+    {
+        connectionString = databaseUrl;
+    }
+
+    // تفعيل PostgreSQL
+    builder.Services.AddDbContext<AppDbContext>(option =>
+        option.UseNpgsql(connectionString));
+}
+else
+{
+    // 2. إذا لم يجد DATABASE_URL (يعني أنتِ في فيجوال ستوديو)، نستخدم SQL Server
+    connectionString = builder.Configuration.GetConnectionString("DbConnection");
+
+    builder.Services.AddDbContext<AppDbContext>(option =>
+        option.UseSqlServer(connectionString));
+}
+#endregion
 #region Languages
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resourses");
 builder.Services.Configure<RequestLocalizationOptions>(option =>
@@ -232,7 +265,17 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "July Team API", Version = "v1" });
 });
 
+#region Services Registration
+// Register generic repository for dependency injection
+// This allows services to request IRepository<T> and receive Repository<T>
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+// Register application services
+// Scoped lifetime means one instance per HTTP request
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+#endregion
 
 var app = builder.Build();
 
@@ -246,6 +289,11 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
 
 using (var scope = app.Services.CreateScope())
 {
@@ -283,8 +331,6 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
