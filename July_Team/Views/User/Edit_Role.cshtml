@@ -1,29 +1,95 @@
-﻿@{
+﻿@model List<UserRolesViewModel>
 
-	ViewData["Title"] = "Edit Roles";
+@{
+    ViewData["Title"] = "Manage User Roles";
 }
 
-@model UserRolesViewModel
-<h3> Edit Role For @Model.Email</h3>
+<div class="container mt-5">
+    <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+        <div class="p-4 text-white d-flex justify-content-between align-items-center" style="background-color: #032BA7;">
+            <h3 class="m-0"><i class="bi bi-people-fill me-2"></i> User Permissions Management</h3>
+            <span class="badge bg-light text-dark">Total Users: @Model.Count</span>
+        </div>
 
-<form asp-action="Edit_Role" method="post">
-	<input type="hidden" asp-for="UserId" />
-	<input type="hidden" asp-for="Email" />
-	
-	<ul>
-		@foreach(var role in Model.Roles)
-		{
-			<li>
-				<input type="checkbox" name="Roles[@Model.Roles.IndexOf(role)].IsSelected"
-			value="true" @(role.IsSelected ?"checked" :"") />
+        <div class="card-body p-0">
+            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light sticky-top">
+                        <tr>
+                            <th class="ps-4">User Details</th>
+                            <th>Current Roles</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
 
-			<label>@role.RoleName</label>
-			<input type="hidden" name="Roles[@Model.Roles.IndexOf(role)].RoleName" value="@role.RoleName" />
-			</li>
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark">@user.Email</div>
+                                    <small class="text-muted">ID: @user.UserId.Substring(0, 8)...</small>
+                                </td>
+                                <td>
+                                    @if (user.Roles.Any(r => r.IsSelected))
 
-		}
+                                    {
+                                        @foreach (var role in user.Roles.Where(r => r.IsSelected))
 
+                                        {
+                                            <span class="badge rounded-pill px-3 py-2 me-1" style="background-color: #032BA7; font-weight: 500;">
+                                                @role.RoleName
+                                            </span>
+                                        }
+                                    }
 
-	</ul>
-<button class="btn btnalert-secondary" type="submit">Save</button>
-</form>
+                                    else
+
+                                    {
+                                        <span class="text-muted small">No roles assigned</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="Edit_Role" asp-route-userId="@user.UserId"
+                                       class="btn btn-sm text-white rounded-pill px-4 shadow-sm"
+                                       style="background-color: #032BA7;">
+                                        Edit Roles
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white text-center py-3">
+            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-5">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom Scrollbar styling */
+    .table-responsive::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #032BA7;
+        border-radius: 10px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(3, 43, 167, 0.05);
+        transition: 0.3s;
+    }
+
+    .sticky-top {
+        z-index: 1020;
+    }
+</style>

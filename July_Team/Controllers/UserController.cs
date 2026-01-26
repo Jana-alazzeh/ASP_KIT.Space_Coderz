@@ -3,31 +3,31 @@ using Microsoft.AspNetCore.Mvc;
 using July_Team.Models;
 using July_Team.Services;
 using July_Team.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
-/// <summary>
-/// Controller handling user authentication and profile management.
-/// Uses dependency injection to access identity services and custom role service.
-/// </summary>
+
 public class UserController : Controller
 {
     private readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IUserRoleService _userRoleService;
     private const string SOURCE = "UserController";
 
-    /// <summary>
-    /// Constructor with dependency injection.
-    /// The IUserRoleService is now injected to provide enhanced role information.
-    /// </summary>
+    
     public UserController(
-        UserManager<IdentityUser> userManager, 
+        UserManager<IdentityUser> userManager,
         SignInManager<IdentityUser> signInManager,
+        RoleManager<IdentityRole> roleManager,
         IUserRoleService userRoleService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _roleManager = roleManager;
         _userRoleService = userRoleService;
     }
+
 
     [HttpGet]
     public IActionResult Register() 
@@ -89,14 +89,68 @@ public class UserController : Controller
     }
 
 
+    // ===================== Users Management =====================
+
+    [Authorize(Roles = "super admin")]
+    [HttpGet]
+    public IActionResult Users()
+    {
+        var users = _userManager.Users.ToList();
+        return View(users);
+    }
 
 
+    [HttpGet]
+    public async Task<IActionResult> Create_Role()
+    {
+        return View();
+    }
 
+    [Authorize(Roles = "super admin")]
+    [HttpGet]
+	public async Task<IActionResult> Edit_Role(string userId)
+	{
+		if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index");
 
-    /// <summary>
-    /// Displays the user profile with enhanced role information.
-    /// Now includes permissions, control levels, and professional role details.
-    /// </summary>
+		var user = await _userManager.FindByIdAsync(userId);
+		if (user == null) return NotFound();
+
+        var allRoles = await _roleManager.Roles.ToListAsync();
+        var userRoles = await _userManager.GetRolesAsync(user);
+
+		var model = new UserRolesViewModel
+		{
+			UserId = user.Id,
+			Email = user.Email,
+			Roles = allRoles.Select(r => new RolesViewModel
+			{
+				RoleName = r.Name,
+				IsSelected = userRoles.Contains(r.Name)
+			}).ToList()
+		};
+		return View(model);
+	}
+
+    [Authorize(Roles = "super admin")]
+    [HttpPost]
+    public async Task<IActionResult> Edit_Role(UserRolesViewModel model)
+    {
+        var user = await _userManager.FindByIdAsync(model.UserId);
+        if (user == null) return NotFound();
+
+        // مسح الرتب القديمة
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+
+        // إضافة الرتب الجديدة المختارة
+        var selectedRoles = model.Roles.Where(r => r.IsSelected).Select(r => r.RoleName);
+        await _userManager.AddToRolesAsync(user, selectedRoles);
+
+        return RedirectToAction("Index"); // العودة لجدول المستخدمين بعد الحفظ
+    }
+  
+    
+
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
@@ -143,6 +197,7 @@ public class UserController : Controller
     /// Returns detailed role information as JSON for AJAX requests.
     /// Useful for dynamic UI updates without full page reload.
     /// </summary>
+
     [HttpGet]
     public async Task<IActionResult> GetRoleDetails()
     {
@@ -153,13 +208,21 @@ public class UserController : Controller
         }
 
         var profileInfo = await _userRoleService.GetUserProfileInfoAsync(user);
-        
-        return Json(new 
-        { 
-            success = true, 
-            roles = profileInfo.RoleDetails,
+
+        return Json(new
+        {
+            success = true,
+            userName = user.UserName, // 👈 أضفنا اسم المستخدم
+            roles = profileInfo.RoleDetails, // هذه تحتوي على الـ Permissions
             controlLevel = profileInfo.HighestControlLevel
         });
+    }
+
+
+    [AllowAnonymous] 
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 }
 

@@ -17,6 +17,13 @@ namespace July_Team.Models
         public DbSet<JoinUsViewModel> JoinRequests { get; set; }
         public DbSet<ContactUsViewModel> ContactUs { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder); // سطر مهم جداً لعمل الـ Identity
 
+            modelBuilder.Entity<Course>()
+                .Property(c => c.Price)
+                .HasColumnType("decimal(18,2)");
+        }
     }
 }

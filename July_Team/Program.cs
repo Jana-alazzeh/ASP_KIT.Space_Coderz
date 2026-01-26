@@ -156,24 +156,42 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 #region connectDB
-// Use PostgreSQL for Replit environment
+// 1. محاولة جلب رابط قاعدة البيانات من Replit (PostgreSQL)
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-var connectionString = databaseUrl;
-if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgresql://"))
-{
-    var uri = new Uri(databaseUrl);
-    var userInfo = uri.UserInfo.Split(':');
-    var host = uri.Host;
-    var database = uri.AbsolutePath.TrimStart('/');
-    var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-    var sslMode = query["sslmode"] ?? "disable";
-    var npgsqlSslMode = sslMode == "disable" ? "Disable" : "Require";
-    connectionString = $"Host={host};Database={database};Username={userInfo[0]};Password={userInfo[1]};SSL Mode={npgsqlSslMode}";
-}
-builder.Services.AddDbContext<AppDbContext>(option =>
-    option.UseNpgsql(connectionString));
-#endregion
+string connectionString;
 
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    // إذا وجد الرابط، نستخدم PostgreSQL
+    if (databaseUrl.StartsWith("postgresql://"))
+    {
+        var uri = new Uri(databaseUrl);
+        var userInfo = uri.UserInfo.Split(':');
+        var host = uri.Host;
+        var database = uri.AbsolutePath.TrimStart('/');
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var sslMode = query["sslmode"] ?? "disable";
+        var npgsqlSslMode = sslMode == "disable" ? "Disable" : "Require";
+        connectionString = $"Host={host};Database={database};Username={userInfo[0]};Password={userInfo[1]};SSL Mode={npgsqlSslMode}";
+    }
+    else
+    {
+        connectionString = databaseUrl;
+    }
+
+    // تفعيل PostgreSQL
+    builder.Services.AddDbContext<AppDbContext>(option =>
+        option.UseNpgsql(connectionString));
+}
+else
+{
+    // 2. إذا لم يجد DATABASE_URL (يعني أنتِ في فيجوال ستوديو)، نستخدم SQL Server
+    connectionString = builder.Configuration.GetConnectionString("DbConnection");
+
+    builder.Services.AddDbContext<AppDbContext>(option =>
+        option.UseSqlServer(connectionString));
+}
+#endregion
 #region Languages
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resourses");
 builder.Services.Configure<RequestLocalizationOptions>(option =>
