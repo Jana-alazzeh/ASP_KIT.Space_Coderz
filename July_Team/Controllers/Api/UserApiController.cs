@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using July_Team.Models;
 
@@ -12,8 +12,7 @@ public class UserApiController : ControllerBase
     {
         _userManager = userManager;
     }
-
-    // CREATE - تسجيل مستخدم جديد
+  
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegesterModel model)
     {
