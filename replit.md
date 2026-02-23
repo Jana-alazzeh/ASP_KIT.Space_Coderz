@@ -64,8 +64,9 @@ The application runs on port 5000 with the workflow command:
 cd July_Team && dotnet run --urls "http://0.0.0.0:5000"
 ```
 
+
 ## Database
-Uses Replit's built-in PostgreSQL database. The DATABASE_URL environment variable is automatically configured and the application migrates the database on startup.
+The DATABASE_URL environment variable is automatically configured and the application migrates the database on startup.
 
 ## API Documentation
 Swagger UI is available at `/swagger` in development mode.
